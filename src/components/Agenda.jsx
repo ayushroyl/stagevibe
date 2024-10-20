@@ -5,44 +5,55 @@ const agendaItems = [
     {
         time: '🕙 10:00 AM - 10:30 AM',
         title: 'Registration and Networking',
-        description: 'Check in at the entrance, enjoy refreshments, and receive your welcome kit.',
-        icon: '🎟️', // Ticket emoji
+        description: 'Check in at the entrance, enjoy refreshments, and pick up your welcome kit.',
+        icon: '🎟️',
     },
     {
         time: '🎉 10:30 AM - 11:00 AM',
         title: 'Opening Ceremony',
         description: 'Join us for the inaugural address and welcome song.',
-        icon: '📢', // Megaphone emoji
+        icon: '📢',
     },
     {
         time: '🎭 11:00 AM - 1:00 PM',
         title: 'Cultural Performances',
         description: 'Enjoy performances by talented students showcasing music, dance, and drama.',
-        icon: '🎶', // Music note emoji
+        icon: (
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="yellow" // Color the notes yellow
+                className="h-4 w-4"
+            >
+                <path d="M12 3v10.55A4 4 0 1014 17V7h5V3h-7z" />
+            </svg>
+        ),
     },
     {
         time: '🍽️ 1:00 PM - 1:30 PM',
         title: 'Lunch Break',
         description: 'Take a break and enjoy a delicious lunch while mingling with friends.',
-        icon: '🥗', // Salad emoji
+        icon: '🥗',
     },
     {
         time: '🎲 1:30 PM - 2:30 PM',
         title: 'Extra Enjoyment',
-        description: 'Participate in fun games and interactive activities with fellow students.',
-        icon: '🏆', // Trophy emoji
+        description: 'Join fun games and interactive activities with fellow students.',
+        icon: '🏆',
     },
     {
         time: '🎤 2:30 PM - 3:00 PM',
         title: 'Photo Session',
-        description: 'Catch your memories & meet your seniours, teachers',
-        icon: '💬', // Speech balloon emoji
+        description: 'Capture memories and meet your seniors and teachers.',
+        icon: '💬',
     },
     {
         time: '🎊 3:00 PM - 4:30 PM',
-        title: 'Closing Ceremony & Random Group Dance',
-        description: 'Wrap up the day with closing remarks, thank you notes, and final celebrations with mix group dance.',
-        icon: '🎆', // Fireworks emoji
+        title: 'Closing Ceremony & Group Dance',
+        description: 'Wrap up the day with closing remarks, thank-you notes, and a final group dance celebration.',
+        icon: '🎆',
     },
 ];
 
