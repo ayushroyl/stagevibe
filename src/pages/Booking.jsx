@@ -235,7 +235,7 @@ const Booking = () => {
       </div>
 
       {/* Instructions */}
-      <div className="flex flex-wrap justify-center mb-4">
+      <div className="flex flex-wrap justify-center mb-2">
         <div className="flex items-center mr-4 mb-2">
           <div className="w-4 h-4 border border-green-500 bg-transparent rounded mr-2"></div>
           <span>Available</span>
@@ -256,7 +256,7 @@ const Booking = () => {
 
       {/* Booking Summary */}
       {selectedSeats.size > 0 && (
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-center mb-20">
           <div className="border border-gray-300 rounded p-4">
             <h2 className="text-lg font-bold mb-2">Booking Summary</h2>
             <div>
