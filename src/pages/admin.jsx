@@ -67,7 +67,8 @@ const AdminDashboard = () => {
     e.preventDefault();
     const usersRef = ref(database, 'users');
     const newUserRef = push(usersRef);
-    set(newUserRef, { ...userForm, id: newUserRef.key, approved: false });
+    const newUser = { ...userForm, id: newUserRef.key, approved: false };
+    set(newUserRef, newUser);
     setUsers((prevUsers) => [newUser, ...prevUsers]);
     showPopup(`User ${userForm.name} added successfully.`);
     setUserForm({ name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: 'cash' });
