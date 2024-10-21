@@ -1,54 +1,69 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
-import { motion } from "framer-motion";
-import { Link as ScrollLink } from "react-scroll"; // Import Link from react-scroll
-import { Link } from "react-router-dom"; // For non-hash based routing
+import { motion, AnimatePresence } from "framer-motion";
+import { Link as ScrollLink } from "react-scroll";
+import { Link } from "react-router-dom";
 import hlogo from '../assets/header-logo.png';
 
-const Nav = () => {
+const Nav = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
 
-  // Toggle the mobile menu
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  // Framer Motion variants for mobile menu animations
-  const mobileMenuVariants = {
-    hidden: { opacity: 0, x: "-100%" },
-    visible: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: "-100%" },
-  };
+  const navItems = [
+    { label: "Home", path: "/" },
+    { label: "About", path: "about", isScroll: true },
+    { label: "Agenda", path: "agenda", isScroll: true },
+    { label: "Photos", path: "photos", isScroll: true },
+    { label: "Team", path: "team", isScroll: true },
+    { label: "Book Seat", path: "/booking" },
+    { label: "Rating", path: "/rating" },
+    { label: "Login", path: "/login" }
+  ];
+
+  useEffect(() => {
+    const header = document.querySelector('header');
+    if (header) {
+      setHeaderHeight(header.offsetHeight);
+    }
+  }, []);
 
   return (
-    <header className="sticky top-0 z-40 bg-[#040024CC] backdrop-blur-lg p-4 flex justify-between items-center">
-      <div className="w-full max-w-7xl flex justify-between items-center mx-auto">
-        {/* Brand / Logo */}
-        <Link to="/" className="flex items-center text-white text-2xl font-serif font-semibold">
-          <img src={hlogo} alt="StageVibe Logo" className="mr-2 h-auto w-10" /> StageVibe
+    <>
+      <header  className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-[#040024] to-[#0b0b22] backdrop-blur-lg p-4">
+      <div className="w-full max-w-7xl mx-auto flex justify-between items-center relative">
+        <Link to="/" className="flex items-center text-white text-2xl font-serif font-semibold cursor-pointer">
+          <motion.img 
+            src={hlogo} 
+            alt="StageVibe Logo" 
+            className="mr-2 h-auto w-10"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          />
+          <motion.span
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            StageVibe
+          </motion.span>
         </Link>
-        {/* Hamburger Menu Icon for Mobile */}
-        <button
-          className="md:hidden text-white text-2xl focus:outline-none"
+
+        <motion.button
+          className="md:hidden text-white text-2xl focus:outline-none cursor-pointer"
           onClick={toggleMobileMenu}
-          aria-label="Toggle navigation menu"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
         >
           {isMobileMenuOpen ? <FiX /> : <FiMenu />}
-        </button>
+        </motion.button>
 
-        {/* Navigation Links for Desktop */}
-        <nav className="md:flex hidden md:flex-row md:items-center md:gap-4">
-          <ul className="md:text-lg flex flex-col md:flex-row md:gap-4">
-            {[
-              { label: "Home", path: "/" },
-              { label: "About", path: "about", isScroll: true },
-              { label: "Agenda", path: "agenda", isScroll: true },
-              { label: "Photos", path: "photos", isScroll: true },
-              { label: "Team", path: "team", isScroll: true },
-              { label: "Book Seat", path: "/booking" }, // Non-hash-based routing
-              { label: "Rating", path: "/rating" },
-              { label: "Login", path: "/login" }
-            ].map((item, index) => (
+        <nav className="hidden md:flex md:items-center md:gap-4">
+          <ul className="md:text-lg flex flex-row gap-4">
+            {navItems.map((item, index) => (
               <motion.li
                 key={index}
                 whileHover={{ scale: 1.1 }}
@@ -56,18 +71,18 @@ const Nav = () => {
               >
                 {item.isScroll ? (
                   <ScrollLink
-                    to={item.path} // Use to scroll to section
-                    smooth={true} // Enables smooth scrolling
-                    offset={-80} // Adjust this value to align the section correctly
-                    duration={500} // Scrolling animation duration
-                    className="nav-link bg-transparent hover:bg-white hover:text-black font-semibold transition-all duration-300 rounded-md py-2 px-4 tracking-normal block"
+                    to={item.path}
+                    smooth={true}
+                    offset={-80}
+                    duration={500}
+                    className="nav-link bg-transparent hover:bg-white hover:text-black font-semibold transition-all duration-300 rounded-md py-2 px-4 tracking-normal block cursor-pointer"
                   >
                     {item.label}
                   </ScrollLink>
                 ) : (
                   <Link
                     to={item.path}
-                    className="nav-link bg-transparent hover:bg-white hover:text-black font-semibold transition-all duration-300 rounded-md py-2 px-4 tracking-normal block"
+                    className="nav-link bg-transparent hover:bg-white hover:text-black font-semibold transition-all duration-300 rounded-md py-2 px-4 tracking-normal block cursor-pointer"
                   >
                     {item.label}
                   </Link>
@@ -77,58 +92,54 @@ const Nav = () => {
           </ul>
         </nav>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <motion.nav
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            variants={mobileMenuVariants}
-            transition={{ duration: 0.4 }}
-            className="absolute top-16 left-0 w-full bg-[#0b0b22FD] rounded-b-lg z-30"
-          >
-            <ul className="text-center flex flex-col space-y-4 p-6">
-              {[
-                { label: "Home", path: "/" },
-                { label: "About", path: "about", isScroll: true },
-                { label: "Agenda", path: "agenda", isScroll: true },
-                { label: "Photos", path: "photos", isScroll: true },
-                { label: "Book Seat", path: "/booking" },
-                { label: "Team", path: "team", isScroll: true },
-                { label: "Login", path: "/login" }
-              ].map((item, index) => (
-                <motion.li
-                  key={index}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {item.isScroll ? (
-                    <ScrollLink
-                      to={item.path}
-                      smooth={true}
-                      offset={-80}
-                      duration={500}
-                      className="text-white font-semibold transition-all duration-300 bg-[#0b0b22FD] hover:bg-white hover:text-black py-2 px-4 rounded-md"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      {item.label}
-                    </ScrollLink>
-                  ) : (
-                    <Link
-                      to={item.path}
-                      className="text-white font-semibold transition-all duration-300 bg-[#0b0b22FD] hover:bg-white hover:text-black py-2 px-4 rounded-md"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
-                  )}
-                </motion.li>
-              ))}
-            </ul>
-          </motion.nav>
-        )}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.nav
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="absolute top-full left-0 w-full bg-gradient-to-b from-[#040024] to-[#0b0b22] rounded-b-lg z-30"
+            >
+              <ul className="text-center flex flex-col space-y-4 p-6">
+                {navItems.map((item, index) => (
+                  <motion.li
+                    key={index}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {item.isScroll ? (
+                      <ScrollLink
+                        to={item.path}
+                        smooth={true}
+                        offset={-80}
+                        duration={500}
+                        className="text-white font-semibold transition-all duration-300 hover:bg-white hover:text-black py-2 px-4 rounded-md block cursor-pointer"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </ScrollLink>
+                    ) : (
+                      <Link
+                        to={item.path}
+                        className="text-white font-semibold transition-all duration-300 hover:bg-white hover:text-black py-2 px-4 rounded-md block cursor-pointer"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    )}
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.nav>
+          )}
+        </AnimatePresence>
       </div>
     </header>
+      <main style={{ paddingTop: `${headerHeight}px` }}>
+        {children}
+      </main>
+    </>
   );
 };
 

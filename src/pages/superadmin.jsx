@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { ref, set, push, onValue, remove } from 'firebase/database';
 import database from '../firebase'; // Import Firebase instance
 
-
-
 const SuperAdminDashboard = () => {
 
     const navigate = useNavigate();
@@ -17,11 +15,13 @@ const SuperAdminDashboard = () => {
         }
     }, [isSuperAdmin, navigate]);
 
-
-    const [superadminName, setSuperadminName] = useState('Super Admin');
+    const superadminName = JSON.parse(localStorage.getItem('currentSuperAdmin')).username;
     const [users, setUsers] = useState([]);
     const [performers, setPerformers] = useState([]);
     const [admins, setAdmins] = useState([]);
+
+
+
 
     const [userForm, setUserForm] = useState({
         name: '',
@@ -29,7 +29,7 @@ const SuperAdminDashboard = () => {
         roll: '',
         mobile: '',
         seatNo: '',
-        paymentMode: 'cash',
+        paymentMode: '',
     });
 
     const [performerForm, setPerformerForm] = useState({
@@ -135,7 +135,7 @@ const SuperAdminDashboard = () => {
         set(userRef, { ...editingUser, ...userForm });
         showPopup(`User ${editingUser.name} updated successfully.`);
         setEditingUser(null);
-        setUserForm({ name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: 'cash' });
+        setUserForm({ name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
     };
 
     // Delete user
@@ -177,13 +177,13 @@ const SuperAdminDashboard = () => {
         <div className="min-h-screen bg-gray-100 p-8">
             <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-8">
                 <h1 className="text-3xl font-bold text-gray-800 mb-8">
-                    SuperAdmin Dashboard 
+                    SuperAdmin Dashboard
                 </h1>
                 <h2 className="text-xl font-semibold text-gray-600 mb-6">
                     Welcome {superadminName}
                 </h2>
                 <div>
-                <a className='font-medium bg-green-800 border-2 border-red-600 rounded-md text-white' href='https://admin-panel-tan-three.vercel.app/login'>New Applied Perfomers</a>
+                    <a className='font-medium bg-green-800 border-2 border-red-600 rounded-md text-white' href='https://admin-panel-tan-three.vercel.app/login'>New Applied Perfomers</a>
                 </div>
                 {/* Display the message */}
                 {showMessage && (
@@ -348,14 +348,14 @@ const SuperAdminDashboard = () => {
                                         <p><strong>Payment Mode:</strong> {user.paymentMode}</p>
                                         <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
                                     </div>
-                                    <div>
+                                    <div className='flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0'>
                                         <a className="bg-blue-600 text-white px-4 py-1 rounded-md hover:bg-red-600 transition" href=''
                                         >
                                             Invite
                                         </a>
                                         <button
                                             onClick={() => handleDeleteUser(user.id)}
-                                            className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition mt-2"
+                                            className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
                                         >
                                             Delete
                                         </button>
@@ -386,7 +386,7 @@ const SuperAdminDashboard = () => {
                                         <p><strong>Payment Mode:</strong> {user.paymentMode}</p>
                                         <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
                                     </div>
-                                    <div>
+                                    <div className='flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0'>
                                         <button
                                             onClick={() => handleApproveUser(user.id)}
                                             className="bg-green-500 text-white py-1 px-2 rounded-md hover:bg-green-600 transition"
@@ -395,7 +395,7 @@ const SuperAdminDashboard = () => {
                                         </button>
                                         <button
                                             onClick={() => handleDeleteUser(user.id)}
-                                            className="bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 transition mt-2"
+                                            className="bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 transition"
                                         >
                                             Delete
                                         </button>
