@@ -347,12 +347,10 @@ const SuperAdminDashboard = () => {
                                         <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
                                     </div>
                                     <div>
-                                        <button
-                                            onClick={() => ref="https://google.com"}
-                                            className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
+                                        <a className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition" href=''
                                         >
                                             Generate Invitation
-                                        </button>
+                                        </a>
                                         <button
                                             onClick={() => handleDeleteUser(user.id)}
                                             className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
