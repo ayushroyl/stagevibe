@@ -177,13 +177,14 @@ const SuperAdminDashboard = () => {
         <div className="min-h-screen bg-gray-100 p-8">
             <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-8">
                 <h1 className="text-3xl font-bold text-gray-800 mb-8">
-                    SuperAdmin Dashboard <a className='font-medium bg-green-800' href='https://admin-panel-ten-three.vercel.app/login'>Applied Perfomer</a>
+                    SuperAdmin Dashboard 
                 </h1>
-                <a className='font-medium bg-green-800 shadow-lg rounded-lg' href='https://admin-panel-ten-three.vercel.app'>Applied Perfomer</a>
                 <h2 className="text-xl font-semibold text-gray-600 mb-6">
                     Welcome {superadminName}
                 </h2>
-
+                <div>
+                <a className='font-medium bg-green-800 items-center text-white' href='https://admin-panel-tan-three.vercel.app/login'>Applied Perfomer</a>
+                </div>
                 {/* Display the message */}
                 {showMessage && (
                     <div className="bg-green-500 text-white p-4 rounded-md mb-4">
