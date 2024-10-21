@@ -220,7 +220,7 @@ const AdminDashboard = () => {
               type="submit"
               className="col-span-2 py-2 px-4 bg-yellow-500 text-black font-semibold rounded-full hover:bg-yellow-600 transition duration-300"
             >
-              Add Performer
+              Add Selected Performer
             </button>
           </form>
         </div>
@@ -240,7 +240,7 @@ const AdminDashboard = () => {
                     <p><strong>Name:</strong> {user.name}</p>
                     <p><strong>Class:</strong> {user.class}</p>
                     <p><strong>Roll:</strong> {user.roll}</p>
-                    <p><strong>Mobile:</strong> {user.mobile}</p>
+                    <p><strong>Mobile:</strong> {`${user.mobile.slice(0, 2)}XXXXXX${user.mobile.slice(-2)}`}</p>
                     <p><strong>Payment Mode:</strong> {user.paymentMode}</p>
                     <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
                   </div>
@@ -263,7 +263,7 @@ const AdminDashboard = () => {
 
         {/* Display Performers */}
         <div>
-          <h3 className="text-2xl font-bold mb-4 text-blue-700">Performers</h3>
+          <h3 className="text-2xl font-bold mb-4 text-blue-700">Selected Performers</h3>
           {performers.length > 0 ? (
             <ul className="space-y-4">
               {performers.map((performer) => (

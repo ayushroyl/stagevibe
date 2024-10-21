@@ -266,7 +266,7 @@ const SuperAdminDashboard = () => {
 
                 {/* Add Performer Form */}
                 <div className="mb-10">
-                    <h3 className="text-2xl font-bold mb-4 text-black">Add Performer</h3>
+                    <h3 className="text-2xl font-bold mb-4 text-black">Add Selected Performer</h3>
                     <form onSubmit={handleAddPerformer} className="grid grid-cols-2 gap-4">
                         <input
                             type="text"
@@ -402,7 +402,7 @@ const SuperAdminDashboard = () => {
                 {/* Display Performers */}
                 <div className="mb-10">
 
-                    <h3 className="text-2xl font-bold mb-4 text-blue-700">Performers</h3>
+                    <h3 className="text-2xl font-bold mb-4 text-blue-700">Selected Performers</h3>
                     {performers.length > 0 ? (
                         <ul className="space-y-4">
                             {performers.map((performer) => (
