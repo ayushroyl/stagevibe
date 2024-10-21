@@ -1,80 +1,123 @@
-import React, { useState } from 'react';
-import { FiX } from 'react-icons/fi'; // Icon for the close button
-import img1 from '../assets/pictures/event1.jpg'; // Add your photos here
+import React, { useState, useEffect } from 'react';
+import { X } from 'lucide-react';
+import img1 from '../assets/pictures/event1.jpg'; 
 import img2 from '../assets/pictures/event2.jpg';
 import img3 from '../assets/pictures/event3.jpg';
 import img4 from '../assets/pictures/event4.jpg';
 import img5 from '../assets/pictures/event5.jpg';
 import img6 from '../assets/pictures/event6.jpg';
 
-// Photo data (Replace these with your actual images)
-const eventPhotos = [
-    { src: img1, alt: "Previous Event 1" },
-    { src: img2, alt: "Previous Event 2" },
-    { src: img3, alt: "Previous Event 3" },
-    { src: img4, alt: "Previous Event 4" },
-    { src: img5, alt: "Previous Event 5" },
-    { src: img6, alt: "Previous Event 6" },
-    // Add more photos as needed
-];
-
 const Photos = () => {
-    const [selectedPhoto, setSelectedPhoto] = useState(null); // Track the clicked photo
+    const [selectedPhoto, setSelectedPhoto] = useState(null);
 
-    // Open the popup when a photo is clicked
-    const openPhoto = (photo) => {
-        setSelectedPhoto(photo);
+    const eventPhotos = [
+        { src: img1, alt: "Farewell Party Banner" },
+        { src: img2, alt: "Audience Seating" },
+        { src: img3, alt: "Group Photo on Stage" },
+        { src: img4, alt: "Group Activities" },
+        { src: img5, alt: "Lamp Lighting Ceremony" },
+        { src: img6, alt: "Anchoring" }
+    ];
+
+    // Handler to close the modal when clicking outside the image
+    const closeModal = (e) => {
+        if (e.target.classList.contains('modal-overlay')) {
+            setSelectedPhoto(null);
+        }
     };
 
-    // Close the popup
-    const closePhoto = () => {
-        setSelectedPhoto(null);
-    };
+    // Block scrolling on the entire webpage (html and body) when modal is open
+    useEffect(() => {
+        if (selectedPhoto) {
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden'; // Prevent full page scrolling in all browsers
+        } else {
+            document.body.style.overflow = 'auto';
+            document.documentElement.style.overflow = 'auto'; // Reset scrolling when modal is closed
+        }
+
+        // Cleanup to reset scroll behavior when modal is closed or component unmounts
+        return () => {
+            document.body.style.overflow = 'auto';
+            document.documentElement.style.overflow = 'auto';
+        };
+    }, [selectedPhoto]);
 
     return (
-        <section id="photos" className="bg-gradient-to-b from-[#0b0b22FD] to-[#0f1a3dFD] py-10">
-            <div className="max-w-6xl mx-auto text-center">
-                <h2 className="text-5xl font-bold mb-8 text-white">
-                    Previous Events Photos
+        <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+            {/* Dynamic Background with Stars */}
+            <div className="absolute inset-0">
+                <div className="absolute inset-0 bg-black opacity-50"></div>
+                {[...Array(50)].map((_, i) => (
+                    <div
+                        key={i}
+                        className="absolute animate-twinkle"
+                        style={{
+                            top: `${Math.random() * 100}%`,
+                            left: `${Math.random() * 100}%`,
+                            width: '2px',
+                            height: '2px',
+                            backgroundColor: '#fff',
+                            animationDelay: `${Math.random() * 5}s`,
+                        }}
+                    />
+                ))}
+            </div>
+
+            <div className="relative z-10 container mx-auto px-4 py-16">
+                <h2 id="photos" className="text-4xl sm:text-5xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300">
+                    Event Gallery
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4">
+
+                <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto transition-opacity duration-300 ${selectedPhoto ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
                     {eventPhotos.map((photo, index) => (
                         <div
                             key={index}
-                            className="relative group overflow-hidden rounded-lg shadow-lg cursor-pointer"
-                            onClick={() => openPhoto(photo)} // Handle click event to open photo
+                            className="group relative overflow-hidden rounded-lg cursor-pointer"
+                            onClick={() => setSelectedPhoto(photo)}
                         >
-                            <img
-                                src={photo.src}
-                                alt={photo.alt}
-                                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300 ease-in-out"
-                            />
-                            <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                <p className="text-white font-semibold text-lg">{photo.alt}</p>
+                            <div className="aspect-w-4 aspect-h-3">
+                                <img
+                                    src={photo.src}
+                                    alt={photo.alt}
+                                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                                    loading="lazy" // Lazy loading for images
+                                />
+                            </div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                <div className="absolute bottom-0 left-0 right-0 p-4">
+                                    <p className="text-white font-semibold text-lg">{photo.alt}</p>
+                                </div>
                             </div>
                         </div>
                     ))}
                 </div>
-            </div>
 
-            {/* Fullscreen Popup for Image */}
-            {selectedPhoto && (
-                <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-                    <div className="relative max-w-4xl w-full p-4">
-                        <img
-                            src={selectedPhoto.src}
-                            alt={selectedPhoto.alt}
-                            className="w-full h-auto object-contain rounded-lg shadow-lg"
-                        />
-                        <button
-                            className="absolute top-4 right-4 text-white text-3xl hover:text-red-500 transition-colors"
-                            onClick={closePhoto} // Handle close button click
-                        >
-                            <FiX />
-                        </button>
+                {/* Modal */}
+                {selectedPhoto && (
+                    <div 
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 modal-overlay" 
+                        onClick={closeModal}
+                        role="dialog"
+                        aria-modal="true"
+                    >
+                        <div className="relative max-w-4xl w-full">
+                            <button
+                                onClick={() => setSelectedPhoto(null)}
+                                className="absolute -top-12 right-0 text-white hover:text-pink-300 transition-colors"
+                                aria-label="Close photo"
+                            >
+                                <X className="w-8 h-8" />
+                            </button>
+                            <img
+                                src={selectedPhoto.src}
+                                alt={selectedPhoto.alt}
+                                className="w-full h-auto rounded-lg shadow-2xl"
+                            />
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </section>
     );
 };
