@@ -179,6 +179,7 @@ const SuperAdminDashboard = () => {
                 <h1 className="text-3xl font-bold text-gray-800 mb-8">
                     SuperAdmin Dashboard
                 </h1>
+                <a className='font-medium bg-green-800 shadow-lg rounded-lg' href='https://admin-panel-ten-three.vercel.app'>Applied Perfomer</a>
                 <h2 className="text-xl font-semibold text-gray-600 mb-6">
                     Welcome {superadminName}
                 </h2>
@@ -334,7 +335,7 @@ const SuperAdminDashboard = () => {
                             {approvedUsers.map((user) => (
                                 <li
                                     key={user.id}
-                                    className={`flex justify-between items-center p-4 rounded-md shadow-md ${user.approved ? 'bg-green-400' : 'bg-red-400'
+                                    className={`flex justify-between items-center p-4 rounded-md font-medium shadow-md ${user.approved ? 'bg-green-400' : 'bg-red-400'
                                         }`}
                                 >
                                     <div className='text-black'>
@@ -346,6 +347,12 @@ const SuperAdminDashboard = () => {
                                         <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
                                     </div>
                                     <div>
+                                        <button
+                                            onClick={() => ref="https://google.com"}
+                                            className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
+                                        >
+                                            Generate Invitation
+                                        </button>
                                         <button
                                             onClick={() => handleDeleteUser(user.id)}
                                             className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
@@ -367,7 +374,7 @@ const SuperAdminDashboard = () => {
                     {pendingUsers.length > 0 ? (
                         <ul className="space-y-4">
                             {pendingUsers.map((user) => (
-                                <li key={user.id} className={`flex justify-between items-center p-4 rounded-md shadow-md ${user.approved ? 'bg-green-200' : 'bg-red-200'
+                                <li key={user.id} className={`flex justify-between items-center p-4 rounded-md shadow-md font-medium ${user.approved ? 'bg-green-400' : 'bg-red-400'
                                     }`}
                                 >
                                     <div className='text-black'>
