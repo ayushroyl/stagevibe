@@ -1,72 +1,69 @@
 import React from 'react';
-import { FaInstagram, FaLinkedin, FaGithub, FaTwitter } from 'react-icons/fa'; // Importing icons
+import { motion } from 'framer-motion';
+import { Instagram, Linkedin, Github, Twitter } from 'lucide-react';
 
 const Footer = () => {
-    return (
-        <footer className="bg-gray-800 text-white py-6">
-            <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-center items-center text-center px-4">
-                <div className="mb-4 md:mb-0 mx-4">
-                    <h2 className="text-2xl font-bold mb-1">StageVibe © 2024</h2>
-                    <p className="text-sm">All Rights Reserved</p>
-                    <p className="text-sm mt-2">Made with ❤️ by <a className='font-medium text-sky-600' href='https://instagram.com/ayushroyl'>Ayush</a></p>
-                </div>
+  const currentYear = new Date().getFullYear();
 
-                <div className="mt-4 md:mt-0 mx-4">
-                    <h3 className="font-semibold text-lg mb-2">Connect with Us</h3>
-                    <div className="flex justify-center space-x-6 mt-2">
-                        <a
-                            href="https://instagram.com/ayushroyl"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-orange-500 hover:text-blue-400 transition duration-300"
-                        >
-                            <FaInstagram size={24} />
-                        </a>
-                        <a
-                            href="https://linkedin.com/in/ayushroyl"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-orange-500 hover:text-blue-400 transition duration-300"
-                        >
-                            <FaLinkedin size={24} />
-                        </a>
-                        <a
-                            href="https://github.com/ayushroyl"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-orange-500 hover:text-blue-400 transition duration-300"
-                        >
-                            <FaGithub size={24} />
-                        </a>
-                        <a
-                            href="https://twitter.com/ayushroyl"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-orange-500 hover:text-blue-400 transition duration-300"
-                        >
-                            <FaTwitter size={24} />
-                        </a>
-                    </div>
-                </div>
+  return (
+    <footer className="relative bg-gradient-to-t from-indigo-900 via-purple-900 to-pink-800 text-white py-12">
+      {/* Background glow effect */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-pink-500/20 rounded-full filter blur-[100px]" />
+        <div className="absolute top-0 right-1/4 w-64 h-64 bg-purple-600/20 rounded-full filter blur-[100px]" />
+      </div>
 
-                <div className="mt-4 md:mt-0 mx-4">
-                    <h3 className="font-semibold text-lg mb-2">About StageVibe</h3>
-                    <p className="text-sm text-gray-300 mb-1">
-                        StageVibe is dedicated to creating unforgettable experiences for students through engaging events and activities.
-                    </p>
-                    <p className="text-sm text-gray-300 mb-1">
-                        Join us as we celebrate creativity, talent, and collaboration within our community.
-                    </p>
-                    <p className="text-sm text-gray-300 mb-1">
-                        For business inquiries or collaborations, reach out to us at: <span className="text-orange-500">ayushroy.business.contact@gmail.com</span>
-                    </p>
-                    <p className="text-sm text-gray-300">
-                        Connect with us on social media for updates on our events!
-                    </p>
-                </div>
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Logo and copyright */}
+          <div className="text-center md:text-left">
+            <h3 className="text-2xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-pink-300 to-indigo-300">
+              StageVibe © {currentYear}
+            </h3>
+            <p className="text-indigo-200">All Rights Reserved</p>
+            <p className="text-indigo-200 mt-2">
+              Made with <span className="text-red-500">❤</span> by Ayush
+            </p>
+          </div>
+
+          {/* Connect with Us */}
+          <div className="text-center">
+            <h4 className="text-lg font-semibold mb-4 text-pink-300">Connect with Us</h4>
+            <div className="flex justify-center space-x-4">
+              {[Instagram, Linkedin, Github, Twitter].map((Icon, index) => (
+                <motion.a
+                  key={index}
+                  href="#"
+                  className="text-indigo-200 hover:text-pink-300 transition-colors duration-300"
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Icon size={24} />
+                </motion.a>
+              ))}
             </div>
-        </footer>
-    );
+          </div>
+
+          {/* About StageVibe */}
+          <div className="text-center md:text-right">
+            <h4 className="text-lg font-semibold mb-4 text-pink-300">About StageVibe</h4>
+            <p className="text-indigo-200 mb-2">
+              StageVibe is dedicated to creating unforgettable experiences for students through engaging events and activities.
+            </p>
+            <p className="text-indigo-200 mb-2">
+              Join us as we celebrate creativity, talent, and collaboration within our community.
+            </p>
+            <p className="text-indigo-200 mb-2">
+              For business inquiries or collaborations, reach out to us at: ayushroy.business.contact@gmail.com
+            </p>
+            <p className="text-indigo-200">
+              Connect with us on social media for updates on our events!
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
 };
 
 export default Footer;
