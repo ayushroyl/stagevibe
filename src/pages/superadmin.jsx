@@ -90,6 +90,7 @@ const SuperAdminDashboard = () => {
         const usersRef = ref(database, 'users');
         const newUserRef = push(usersRef);
         set(newUserRef, { ...userForm, id: newUserRef.key, approved: false });
+        setUsers((prevUsers) => [newUser, ...prevUsers]);
         showPopup(`User ${userForm.name} added successfully.`);
         setUserForm({ name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: 'cash' });
     };
