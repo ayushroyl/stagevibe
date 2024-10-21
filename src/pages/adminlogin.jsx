@@ -41,7 +41,7 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
-      <div className="bg-gray-800 rounded-2xl mb-28 text-white p-8 shadow-lg w-full max-w-md">
+      <div className="bg-gray-800 rounded-2xl mb-28 text-white p-8 shadow-lg w-auto max-w-md">
         <h2 className="text-3xl font-semibold text-center mb-6">Admin Login</h2>
         
         {error && <p className="text-red-400 text-center mb-4">{error}</p>} {/* Display error messages */}

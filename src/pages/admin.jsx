@@ -57,7 +57,7 @@ const AdminDashboard = () => {
     setUserForm({ ...userForm, [name]: value });
   };
 
-  const handlePerformerInputChange = (e) => {
+const handlePerformerInputChange = (e) => {
     const { name, value } = e.target;
     setPerformerForm({ ...performerForm, [name]: value });
   };
@@ -242,6 +242,7 @@ const AdminDashboard = () => {
                     <p><strong>Class:</strong> {user.class}</p>
                     <p><strong>Roll:</strong> {user.roll}</p>
                     <p><strong>Mobile:</strong> {`${user.mobile.slice(0, 2)}XXXXXX${user.mobile.slice(-2)}`}</p>
+                    <p><strong>Seat No:</strong>{user.seatNo}</p>
                     <p><strong>Payment Mode:</strong> {user.paymentMode}</p>
                     <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
                   </div>

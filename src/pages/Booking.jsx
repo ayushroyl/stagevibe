@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Booking.css';
+import { ref, set, push, onValue, remove } from 'firebase/database';
+import database from '../firebase'; // Import Firebase instance
 
 const rows = [
   { row: 'A', seats: 10 },
@@ -20,7 +22,6 @@ const Booking = () => {
   const [selectedSeats, setSelectedSeats] = useState(new Set());
   const [userDetails, setUserDetails] = useState({});
   const [totalAmount, setTotalAmount] = useState(0);
-  const [isBooking, setIsBooking] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentSeat, setCurrentSeat] = useState('');
   const [isMobile, setIsMobile] = useState(false);
@@ -28,24 +29,46 @@ const Booking = () => {
   const scrollInterval = useRef(null);
   const isManualScroll = useRef(false);
   const autoScrollTimeout = useRef(null);
-  const bookedSeats = [
-    'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10',
-    'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10'
-  ];
-  const [formData, setFormData] = useState({
-    name: '',
-    classN: '',  // Added class
-    rollNo: '',   // Added roll number
-    mobileNo: ''  // Added mobile number
-  });
-  
+  const bookedSeats = useRef([]);
+  const pendingSeats = useRef([]);
 
-  const handleSeatSelection = (seat) => {
-    if (!selectedSeats.has(seat) && !isSeatBooked(seat)) {
-      setCurrentSeat(seat);
-      setIsPopupOpen(true);
-    }
-  };
+
+    // Fetch booked and pending seats from Firebase
+    useEffect(() => {
+      const seatsRef = ref(database, 'users');
+      onValue(seatsRef, (snapshot) => {
+        const booked = [];
+        const pending = [];
+        snapshot.forEach((childSnapshot) => {
+          const seatData = childSnapshot.val();
+          if (seatData.approved) {
+            booked.push(seatData.seatNo);
+          } else {
+            pending.push(seatData.seatNo);
+          }
+        });
+        bookedSeats.current = booked;
+        pendingSeats.current = pending;
+      });
+    }, []);
+
+    const handleSeatSelection = (seat) => {
+      if (!isSeatBooked(seat)) {
+        if (selectedSeats.has(seat)) {
+          // Deselect seat
+          setSelectedSeats((prev) => {
+            const newSelectedSeats = new Set(prev);
+            newSelectedSeats.delete(seat);
+            return newSelectedSeats;
+          });
+          setTotalAmount((prev) => prev - 250); // Assuming each seat costs ₹250
+        } else {
+          // Select seat
+          setCurrentSeat(seat);
+          setIsPopupOpen(true);
+        }
+      }
+    };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -67,31 +90,42 @@ const Booking = () => {
     }
   };
 
-  const handleBooking = () => {
-    const detailsList = Array.from(selectedSeats).map(seat => ({
-      seat,
-      ...userDetails[seat],
-    }));
-    alert(`Booked ${selectedSeats.size} seats for ${JSON.stringify(detailsList)}. Total: ₹${totalAmount}`);
-
-    setSelectedSeats(new Set());
-    setUserDetails({});
-    setTotalAmount(0);
+  const handleAddUser = () => {
+    const usersRef = ref(database, 'users');
+    selectedSeats.forEach(seat => {
+      const newUserRef = push(usersRef);
+      const newUser = {
+        ...userDetails[seat],
+        id: newUserRef.key,
+        approved: false,
+        seatNo: seat,
+        paymentMode: 'online',
+      };
+      set(newUserRef, newUser);
+    });
+    alert(`Users added successfully for seats: ${Array.from(selectedSeats).join(', ')}`);
   };
 
   const isSeatBooked = (seat) => {
-    return bookedSeats.includes(seat);
+    return bookedSeats.current.includes(seat);
+  };
+
+  const isSeatPending = (seat) => {
+    return pendingSeats.current.includes(seat);
   };
 
   const renderSeat = (seat) => {
     const seatBooked = isSeatBooked(seat);
     const seatSelected = selectedSeats.has(seat);
+    const seatPending = isSeatPending(seat);
 
     let seatClass = 'rounded-md w-6 h-6 flex items-center justify-center cursor-pointer text-xs mx-0.5 ';
     if (seatBooked) {
-      seatClass += 'bg-gray-400';
+      seatClass += 'bg-gray-500 border border-green-300';
+    } else if (seatPending) {
+      seatClass += 'bg-yellow-600 text-white border border-green-300';
     } else if (seatSelected) {
-      seatClass += 'bg-green-500 text-white';
+      seatClass += 'bg-green-500 text-white border border-green-300';
     } else {
       seatClass += 'border border-green-500 bg-transparent hover:bg-green-500';
     }
@@ -214,6 +248,10 @@ const Booking = () => {
           <div className="w-4 h-4 bg-gray-500 rounded mr-2"></div>
           <span>Booked</span>
         </div>
+        <div className="flex items-center mr-4 mb-2">
+          <div className="w-4 h-4 bg-yellow-300 rounded mr-2"></div>
+          <span>Pending</span>
+        </div>
       </div>
 
       {/* Booking Summary */}
@@ -227,9 +265,17 @@ const Booking = () => {
             <div>
               <strong>Total Amount:</strong> ₹{totalAmount}
             </div>
+            <h3 className="mt-2 font-semibold">User Details:</h3>
+            <ul>
+              {Array.from(selectedSeats).map((seat) => (
+                <li key={seat}>
+                  {userDetails[seat]?.name || 'Pending'}: {seat}
+                </li>
+              ))}
+            </ul>
             <button
-              className="mt-2 bg-blue-500 text-white py-1 px-3 rounded"
-              onClick={handleBooking}
+              className="mt-2 bg-green-600 text-white py-1 px-3 rounded"
+              onClick={handleAddUser}
             >
               Pay ₹{totalAmount}
             </button>
@@ -239,50 +285,56 @@ const Booking = () => {
 
       {/* Seat selection popup */}
       {isPopupOpen && (
-        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded p-6">
-            <h3 className="text-lg font-bold mb-4">Enter Details for {currentSeat}</h3>
-            <input
-              type="text"
-              name="name"
-              placeholder="Your Name"
-              className="border border-gray-300 rounded p-2 mb-2 w-full"
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="classN"
-              placeholder="Class (BCA1, BCA2, etc.)"
-              className="border border-gray-300 rounded p-2 mb-2 w-full"
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="rollNo"
-              placeholder="Roll Number"
-              className="border border-gray-300 rounded p-2 mb-2 w-full"
-              onChange={handleInputChange}
-            />
-            <input
-              type="text"
-              name="mobileNo"
-              placeholder="Your Mobile Number"
-              className="border border-gray-300 rounded p-2 mb-2 w-full"
-              onChange={handleInputChange}
-            />
-            <div className="flex justify-between">
-              <button
-                className="bg-gray-300 text-gray-700 py-1 px-3 rounded"
-                onClick={() => setIsPopupOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-blue-500 text-white py-1 px-3 rounded"
-                onClick={addSeatToBooking}
-              >
-                Add Seat
-              </button>
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-gradient-to-b from-gray-800 to-gray-900 p-6 rounded-2xl text-white shadow-lg w-auto max-w-md relative" onClick={(e) => e.stopPropagation()}>
+            <h2><b>Enter User Details for </b>{currentSeat}</h2>
+            <div className='font-bold my-4' onSubmit={(e) => { e.preventDefault(); addSeatToBooking(); }}>
+              <input
+                type="text"
+                name="name"
+                placeholder="Name"
+                required
+                onChange={handleInputChange}
+                className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"                           
+              />
+              <input
+                type="text"
+                name="class"
+                placeholder="Class"
+                required
+                onChange={handleInputChange}
+                className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"              
+              />
+              <input
+                type="text"
+                name="roll"
+                placeholder="Roll No"
+                required
+                onChange={handleInputChange}
+                className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"              
+              />
+              <input
+                type="tel"
+                name="mobile"
+                placeholder="Mobile"
+                required
+                onChange={handleInputChange}
+                className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"              
+              />
+              <div className="flex">
+                <button
+                  className="bg-blue-500 text-white py-1 px-3 rounded"
+                  onClick={addSeatToBooking}
+                >
+                  Add Seat
+                </button>
+                <button
+                  className="bg-gray-300 text-gray-700 py-1 px-3 rounded ml-2"
+                  onClick={() => setIsPopupOpen(false)}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -292,4 +344,3 @@ const Booking = () => {
 };
 
 export default Booking;
-  
