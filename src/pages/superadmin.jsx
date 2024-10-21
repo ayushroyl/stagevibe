@@ -177,7 +177,7 @@ const SuperAdminDashboard = () => {
         <div className="min-h-screen bg-gray-100 p-8">
             <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-8">
                 <h1 className="text-3xl font-bold text-gray-800 mb-8">
-                    SuperAdmin Dashboard
+                    SuperAdmin Dashboard <a className='font-medium bg-green-800' href='https://admin-panel-ten-three.vercel.app/login'>Applied Perfomer</a>
                 </h1>
                 <a className='font-medium bg-green-800 shadow-lg rounded-lg' href='https://admin-panel-ten-three.vercel.app'>Applied Perfomer</a>
                 <h2 className="text-xl font-semibold text-gray-600 mb-6">
@@ -327,7 +327,7 @@ const SuperAdminDashboard = () => {
                     </form>
                 </div>
 
-                {/* Display Users */}
+                {/* Display Approved Users */}
                 <div className="mb-10">
                     <h3 className="text-2xl font-bold mb-4 text-black">Approved Users</h3>
                     {approvedUsers.length > 0 ? (
@@ -347,13 +347,13 @@ const SuperAdminDashboard = () => {
                                         <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
                                     </div>
                                     <div>
-                                        <a className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition" href=''
+                                        <a className="bg-blue-600 text-white px-4 py-1 rounded-md hover:bg-red-600 transition" href=''
                                         >
-                                            Generate Invitation
+                                            Invite
                                         </a>
                                         <button
                                             onClick={() => handleDeleteUser(user.id)}
-                                            className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
+                                            className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition mt-2"
                                         >
                                             Delete
                                         </button>
@@ -392,7 +392,7 @@ const SuperAdminDashboard = () => {
                                         </button>
                                         <button
                                             onClick={() => handleDeleteUser(user.id)}
-                                            className="bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 transition"
+                                            className="bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 transition mt-2"
                                         >
                                             Delete
                                         </button>
