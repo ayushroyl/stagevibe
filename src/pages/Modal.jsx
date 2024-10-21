@@ -71,7 +71,7 @@ const Modal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
-      <div className="bg-gradient-to-b from-gray-800 to-gray-900 p-6 rounded-2xl text-white shadow-lg w-full max-w-md relative" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-gradient-to-b from-gray-800 to-gray-900 p-6 rounded-2xl text-white shadow-lg w-auto max-w-md relative" onClick={(e) => e.stopPropagation()}>
         {submitted ? (
           <div className="flex flex-col items-center justify-center text-center">
             {/* Animated Checkmark */}

@@ -183,17 +183,17 @@ const SuperAdminDashboard = () => {
                             value={userForm.name}
                             onChange={handleUserInputChange}
                             placeholder="Name"
-                            className="p-2 border border-gray-300 rounded-md"
+                            className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
                             required
                         />
                         <select
                             name="class"
                             value={userForm.class}
                             onChange={handleUserInputChange}
-                            placeholder="Class"
-                            className="p-2 border border-gray-300 rounded-md"
+                            className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
                             required
                         >
+                            <option value="">Select Class</option>
                             <option value="BCA1">BCA1</option>
                             <option value="BCA2">BCA2</option>
                             <option value="BCA3">BCA3</option>
@@ -206,7 +206,7 @@ const SuperAdminDashboard = () => {
                             value={userForm.roll}
                             onChange={handleUserInputChange}
                             placeholder="Roll"
-                            className="p-2 border border-gray-300 rounded-md"
+                            className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
                             required
                         />
                         <input
@@ -215,7 +215,7 @@ const SuperAdminDashboard = () => {
                             value={userForm.mobile}
                             onChange={handleUserInputChange}
                             placeholder="Mobile"
-                            className="p-2 border border-gray-300 rounded-md"
+                            className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
                             required
                         />
                         <input
@@ -224,15 +224,17 @@ const SuperAdminDashboard = () => {
                             value={userForm.seatNo}
                             onChange={handleUserInputChange}
                             placeholder="Seat No (Pending)"
-                            className="p-2 border border-gray-300 rounded-md"
+                            className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
                             required
                         />
                         <select
                             name="paymentMode"
                             value={userForm.paymentMode}
                             onChange={handleUserInputChange}
-                            className="p-2 border border-gray-300 rounded-md"
+                            className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                            required
                         >
+                            <option value="">Select Mode</option>
                             <option value="cash">Cash</option>
                             <option value="online">Online</option>
                         </select>
@@ -255,7 +257,7 @@ const SuperAdminDashboard = () => {
                             value={performerForm.name}
                             onChange={handlePerformerInputChange}
                             placeholder="Performer Name"
-                            className="p-2 border border-gray-300 rounded-md"
+                            className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
                             required
                         />
                         <input
@@ -264,7 +266,7 @@ const SuperAdminDashboard = () => {
                             value={performerForm.imgUrl}
                             onChange={handlePerformerInputChange}
                             placeholder="Image URL"
-                            className="p-2 border border-gray-300 rounded-md"
+                            className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
                             required
                         />
                         <button
@@ -286,7 +288,7 @@ const SuperAdminDashboard = () => {
                             value={adminForm.username}
                             onChange={handleAdminInputChange}
                             placeholder="Username"
-                            className="p-2 border border-gray-300 rounded-md"
+                            className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
                             required
                         />
                         <input
@@ -295,7 +297,7 @@ const SuperAdminDashboard = () => {
                             value={adminForm.password}
                             onChange={handleAdminInputChange}
                             placeholder="Password"
-                            className="p-2 border border-gray-300 rounded-md"
+                            className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
                             required
                         />
                         <button
@@ -315,7 +317,7 @@ const SuperAdminDashboard = () => {
                             {approvedUsers.map((user) => (
                                 <li
                                     key={user.id}
-                                    className={`flex justify-between items-center p-4 rounded-md shadow-md ${user.approved ? 'bg-green-200' : 'bg-red-200'
+                                    className={`flex justify-between items-center p-4 rounded-md shadow-md ${user.approved ? 'bg-green-400' : 'bg-red-400'
                                         }`}
                                 >
                                     <div className='text-black'>
@@ -338,7 +340,7 @@ const SuperAdminDashboard = () => {
                             ))}
                         </ul>
                     ) : (
-                        <p>No users available.</p>
+                        <p className='font-'>No users available.</p>
                     )}
                 </div>
 
@@ -387,7 +389,7 @@ const SuperAdminDashboard = () => {
                     {performers.length > 0 ? (
                         <ul className="space-y-4">
                             {performers.map((performer) => (
-                                <li key={performer.id} className="flex justify-between items-center p-4 bg-gray-200 rounded-md shadow-md">
+                                <li key={performer.id} className="flex justify-between items-center p-4 bg-cyan-600 rounded-md shadow-md">
                                     <div className='text-black'>
                                         <p><strong>Name:</strong> {performer.name}</p>
                                         <img src={performer.imgUrl} alt={performer.name} className="w-20 h-20 object-cover mt-2" />
@@ -404,7 +406,7 @@ const SuperAdminDashboard = () => {
                             ))}
                         </ul>
                     ) : (
-                        <p>No performers available.</p>
+                        <p className='text-red-500'>No performers available.</p>
                     )}
                 </div>
 
@@ -414,9 +416,9 @@ const SuperAdminDashboard = () => {
                     {admins.length > 0 ? (
                         <ul className="space-y-4">
                             {admins.map((admin) => (
-                                <li key={admin.id} className="bg-gray-200 p-4 rounded-md flex justify-between items-center">
-                                    <span className="text-black">user: {admin.username}</span>
-                                    <span className='text-black'>pass: {admin.password}</span>
+                                <li key={admin.id} className="flex justify-between items-center p-4 bg-gray-500 font-bold rounded-md shadow-md">
+                                    <span className="text-black">User: {admin.username}</span>
+                                    <span className='text-black'>Pass: {admin.password}</span>
                                     <button
                                         onClick={() => handleDeleteAdmin(admin.id)}
                                         className="bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 transition"

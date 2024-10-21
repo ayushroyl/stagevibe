@@ -13,7 +13,7 @@ const AdminDashboard = () => {
     roll: '',
     mobile: '',
     seatNo: '',
-    paymentMode: 'cash',
+    paymentMode: '',
   });
 
   const [performerForm, setPerformerForm] = useState({
@@ -72,18 +72,18 @@ const AdminDashboard = () => {
   };
 
   // Delete user
-  const handleDeleteUser = (id) => {
-    const userRef = ref(database, `users/${id}`);
-    remove(userRef);
-    showPopup('User deleted successfully.');
-  };
+  // const handleDeleteUser = (id) => {
+  //   const userRef = ref(database, `users/${id}`);
+  //   remove(userRef);
+  //   showPopup('User deleted successfully.');
+  // };
 
   // Delete performer
-  const handleDeletePerformer = (id) => {
-    const performerRef = ref(database, `performers/${id}`);
-    remove(performerRef);
-    showPopup('Performer deleted successfully.');
-  };
+  // const handleDeletePerformer = (id) => {
+  //   const performerRef = ref(database, `performers/${id}`);
+  //   remove(performerRef);
+  //   showPopup('Performer deleted successfully.');
+  // };
 
   // Function to show popup message
   const showPopup = (msg) => {
@@ -109,7 +109,7 @@ const AdminDashboard = () => {
         )}
 
         {/* Add User Form */}
-        <div className="mb-10">
+        <div className="mb-10 ">
           <h3 className="text-2xl font-bold mb-4 text-blue-700">Add User</h3>
           <form onSubmit={handleAddUser} className="grid grid-cols-2 gap-4">
             <input
@@ -118,14 +118,14 @@ const AdminDashboard = () => {
               value={userForm.name}
               onChange={handleUserInputChange}
               placeholder="Name"
-              className="p-2 border border-blue-300 rounded-md"
+              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
             <select
               name="class"
               value={userForm.class}
               onChange={handleUserInputChange}
-              className="p-2 border border-blue-300 rounded-md"
+              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             >
               <option value="">Select Class</option>
@@ -141,7 +141,7 @@ const AdminDashboard = () => {
               value={userForm.roll}
               onChange={handleUserInputChange}
               placeholder="Roll"
-              className="p-2 border border-blue-300 rounded-md"
+              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
             <input
@@ -150,7 +150,7 @@ const AdminDashboard = () => {
               value={userForm.mobile}
               onChange={handleUserInputChange}
               placeholder="Mobile"
-              className="p-2 border border-blue-300 rounded-md"
+              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
             <input
@@ -159,21 +159,22 @@ const AdminDashboard = () => {
               value={userForm.seatNo}
               onChange={handleUserInputChange}
               placeholder="Seat No"
-              className="p-2 border border-blue-300 rounded-md"
+              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
             <select
               name="paymentMode"
               value={userForm.paymentMode}
               onChange={handleUserInputChange}
-              className="p-2 border border-blue-300 rounded-md"
+              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
             >
+              <option value="">Select Mode</option>
               <option value="cash">Cash</option>
               <option value="online">Online</option>
             </select>
             <button
               type="submit"
-              className="col-span-2 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+              className="col-span-2 py-2 px-4 bg-yellow-500 text-black font-semibold rounded-full hover:bg-yellow-600 transition duration-300"
             >
               Add User
             </button>
@@ -190,7 +191,7 @@ const AdminDashboard = () => {
               value={performerForm.name}
               onChange={handlePerformerInputChange}
               placeholder="Performer Name"
-              className="p-2 border border-blue-300 rounded-md"
+              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
             <input
@@ -199,12 +200,12 @@ const AdminDashboard = () => {
               value={performerForm.imgUrl}
               onChange={handlePerformerInputChange}
               placeholder="Image URL"
-              className="p-2 border border-blue-300 rounded-md"
+              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
               required
             />
             <button
               type="submit"
-              className="col-span-2 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+              className="col-span-2 py-2 px-4 bg-yellow-500 text-black font-semibold rounded-full hover:bg-yellow-600 transition duration-300"
             >
               Add Performer
             </button>
@@ -219,10 +220,10 @@ const AdminDashboard = () => {
               {users.map((user) => (
                 <li
                   key={user.id}
-                  className={`flex justify-between items-center p-4 rounded-md shadow-md ${user.approved ? 'bg-green-200' : 'bg-red-200'
+                  className={`flex justify-between items-center p-4 rounded-md shadow-md ${user.approved ? 'bg-green-400' : 'bg-red-400'
                     }`}
                 >
-                  <div className='text-black'>
+                  <div className='text-black font-medium'>
                     <p><strong>Name:</strong> {user.name}</p>
                     <p><strong>Class:</strong> {user.class}</p>
                     <p><strong>Roll:</strong> {user.roll}</p>
@@ -230,19 +231,19 @@ const AdminDashboard = () => {
                     <p><strong>Payment Mode:</strong> {user.paymentMode}</p>
                     <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
                   </div>
-                  <div>
+                 {/* <div>
                     <button
                       onClick={() => handleDeleteUser(user.id)}
                       className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
                     >
                       Delete
                     </button>
-                  </div>
+                  </div> */}
                 </li>
               ))}
             </ul>
           ) : (
-            <p>No users available.</p>
+            <p className='font-bold text-orange-500'>No users available.</p>
           )}
 
         </div>
@@ -253,24 +254,24 @@ const AdminDashboard = () => {
           {performers.length > 0 ? (
             <ul className="space-y-4">
               {performers.map((performer) => (
-                <li key={performer.id} className="flex justify-between items-center p-4 bg-gray-200 rounded-md shadow-md">
+                <li key={performer.id} className="flex justify-between items-center p-4 bg-cyan-600 rounded-md shadow-md">
                   <div className='text-black'>
-                    <p><strong>Name:</strong> {performer.name}</p>
-                    <img src={performer.imgUrl} alt={performer.name} className="w-20 h-20 object-cover mt-2" />
+                    <p className='font-medium'>Name: {performer.name}</p>
+                    <img src={performer.imgUrl} alt={performer.name} className="w-20 h-20 object-cover mt-2 rounded-md" />
                   </div>
-                  <div>
+                  {/* <div>
                     <button
                       onClick={() => handleDeletePerformer(performer.id)}
                       className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
                     >
                       Delete
                     </button>
-                  </div>
+                  </div> */}
                 </li>
               ))}
             </ul>
           ) : (
-            <p>No performers available.</p>
+            <p className='font-bold text-orange-500'>No performers available.</p>
           )}
         </div>
       </div>
