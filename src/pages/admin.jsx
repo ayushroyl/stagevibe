@@ -42,12 +42,12 @@ const AdminDashboard = () => {
 
     onValue(usersRef, (snapshot) => {
       const data = snapshot.val();
-      setUsers(data ? Object.values(data) : []);
+      setUsers(data ? Object.values(data).reverse() : []);
     });
 
     onValue(performersRef, (snapshot) => {
       const data = snapshot.val();
-      setPerformers(data ? Object.values(data) : []);
+      setPerformers(data ? Object.values(data).reverse() : []);
     });
   }, []);
 
@@ -158,7 +158,7 @@ const AdminDashboard = () => {
               required
             />
             <input
-              type="text"
+              type="number"
               name="mobile"
               value={userForm.mobile}
               onChange={handleUserInputChange}
@@ -180,6 +180,7 @@ const AdminDashboard = () => {
               value={userForm.paymentMode}
               onChange={handleUserInputChange}
               className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+              required
             >
               <option value="">Select Mode</option>
               <option value="cash">Cash</option>
