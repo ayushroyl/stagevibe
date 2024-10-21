@@ -182,9 +182,15 @@ const SuperAdminDashboard = () => {
                 <h2 className="text-xl font-semibold text-gray-600 mb-6">
                     Welcome {superadminName}
                 </h2>
-                <div>
-                    <a className='font-medium bg-green-800 border-2 border-red-600 rounded-md text-white' href='https://admin-panel-tan-three.vercel.app/login'>New Applied Perfomers</a>
+                <div className="flex justify-center mt-8">
+                    <a
+                        className="font-medium bg-green-800 border-2 border-red-600 rounded-md text-white py-2 px-4 hover:bg-green-700 transition-colors"
+                        href="https://admin-panel-tan-three.vercel.app/login"
+                    >
+                        New Applied Performers list
+                    </a>
                 </div>
+
                 {/* Display the message */}
                 {showMessage && (
                     <div className="bg-green-500 text-white p-4 rounded-md mb-4">

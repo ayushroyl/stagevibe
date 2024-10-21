@@ -152,7 +152,7 @@ const Booking = () => {
           left: 1,
           behavior: 'smooth',
         });
-      }, 50); // Adjust speed by changing the interval time
+      }, 100); // Adjust speed by changing the interval time
     }
   };
 
