@@ -54,17 +54,17 @@ const SuperAdminDashboard = () => {
 
         onValue(usersRef, (snapshot) => {
             const data = snapshot.val();
-            setUsers(data ? Object.values(data) : []);
+            setUsers(data ? Object.values(data).reverse() : []);
         });
 
         onValue(performersRef, (snapshot) => {
             const data = snapshot.val();
-            setPerformers(data ? Object.values(data) : []);
+            setPerformers(data ? Object.values(data).reverse() : []);
         });
 
         onValue(adminsRef, (snapshot) => {
             const data = snapshot.val();
-            setAdmins(data ? Object.values(data) : []);
+            setAdmins(data ? Object.values(data).reverse() : []);
         });
     }, []);
 
