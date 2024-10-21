@@ -1,8 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ref, set, push, onValue, remove } from 'firebase/database';
 import database from '../firebase'; // Import Firebase instance
 
+
+
 const SuperAdminDashboard = () => {
+
+    const navigate = useNavigate();
+    const isSuperAdmin = localStorage.getItem('currentSuperAdmin') !== null;
+
+
+    useEffect(() => {
+        if (!isSuperAdmin) {
+            navigate('/sadminlogin');
+        }
+    }, [isSuperAdmin, navigate]);
+
+
     const [superadminName, setSuperadminName] = useState('Super Admin');
     const [users, setUsers] = useState([]);
     const [performers, setPerformers] = useState([]);
@@ -434,6 +449,8 @@ const SuperAdminDashboard = () => {
             </div>
         </div>
     );
+
+
 };
 
 export default SuperAdminDashboard;

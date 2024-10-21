@@ -17,6 +17,7 @@ import Superadmin from './pages/superadmin';
 import Admin from './pages/admin';
 import SAdminlogin from './pages/sadminlogin';
 import AdminLogin from './pages/adminlogin';
+import SetSuperAdminPassword from './pages/SetSuperAdminPassword';
 
 const App = () => {
   return (
@@ -43,6 +44,7 @@ const App = () => {
         <Route path='/superadmin' element={<Superadmin />} />
         <Route path='/adminlogin' element={<AdminLogin />} />
         <Route path='/sadminlogin' element={<SAdminlogin />} />
+        <Route path='/SetSuperAdminPassword' element={<SetSuperAdminPassword />} />
       </Routes>
 
       <Footer />

@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ref, set, push, onValue, remove } from 'firebase/database';
 import database from '../firebase'; // Import Firebase instance
 
 const AdminDashboard = () => {
+  const navigate = useNavigate();
+  const isAdmin = localStorage.getItem('currentAdmin') !== null;
+
+
+    useEffect(() => {
+        if (!isAdmin) {
+            navigate('/adminlogin');
+        }
+    }, [isAdmin, navigate]);
+
   const [adminName, setAdminName] = useState('Admin');
   const [users, setUsers] = useState([]);
   const [performers, setPerformers] = useState([]);
