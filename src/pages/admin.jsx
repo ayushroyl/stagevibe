@@ -241,7 +241,7 @@ const handlePerformerInputChange = (e) => {
                     <p><strong>Name:</strong> {user.name}</p>
                     <p><strong>Class:</strong> {user.class}</p>
                     <p><strong>Roll:</strong> {user.roll}</p>
-                    <p><strong>Mobile:</strong> {`${user.mobile.slice(0, 2)}XXXXXX${user.mobile.slice(-2)}`}</p>
+                    <p><strong>Mobile:</strong> {user.mobile ? `${user.mobile.slice(0, 2)}XXXXXX${user.mobile.slice(-2)}` : 'N/A'}</p>
                     <p><strong>Seat No:</strong>{user.seatNo}</p>
                     <p><strong>Payment Mode:</strong> {user.paymentMode}</p>
                     <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>

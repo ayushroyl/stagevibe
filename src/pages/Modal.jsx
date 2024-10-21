@@ -111,6 +111,7 @@ const Modal = ({ isOpen, onClose }) => {
                   value={formData.classN}
                   onChange={handleChange}
                   className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                  required
                 >
                   <option value="Choose">Choose Your Class</option>
                   <option value="BCA1">BCA1</option>

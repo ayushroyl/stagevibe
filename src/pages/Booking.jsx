@@ -29,8 +29,8 @@ const Booking = () => {
   const scrollInterval = useRef(null);
   const isManualScroll = useRef(false);
   const autoScrollTimeout = useRef(null);
-  const bookedSeats = useRef([]);
-  const pendingSeats = useRef([]);
+  const [bookedSeats, setBookedSeats] = useState([]);
+  const [pendingSeats, setPendingSeats] = useState([]);
 
 
     // Fetch booked and pending seats from Firebase
@@ -47,13 +47,13 @@ const Booking = () => {
             pending.push(seatData.seatNo);
           }
         });
-        bookedSeats.current = booked;
-        pendingSeats.current = pending;
+        setBookedSeats(booked);
+        setPendingSeats(pending);
       });
     }, []);
 
     const handleSeatSelection = (seat) => {
-      if (!isSeatBooked(seat)) {
+      if (!isSeatBooked(seat) && !isSeatPending(seat)) {
         if (selectedSeats.has(seat)) {
           // Deselect seat
           setSelectedSeats((prev) => {
@@ -103,15 +103,18 @@ const Booking = () => {
       };
       set(newUserRef, newUser);
     });
+    setCurrentSeat('');
+    setSelectedSeats(new Set());
+    setTotalAmount(0);
     alert(`Users added successfully for seats: ${Array.from(selectedSeats).join(', ')}`);
   };
 
   const isSeatBooked = (seat) => {
-    return bookedSeats.current.includes(seat);
+    return bookedSeats.includes(seat);
   };
 
   const isSeatPending = (seat) => {
-    return pendingSeats.current.includes(seat);
+    return pendingSeats.includes(seat);
   };
 
   const renderSeat = (seat) => {
@@ -149,7 +152,7 @@ const Booking = () => {
           left: 1,
           behavior: 'smooth',
         });
-      }, 30); // Adjust speed by changing the interval time
+      }, 50); // Adjust speed by changing the interval time
     }
   };
 
@@ -297,16 +300,23 @@ const Booking = () => {
                 onChange={handleInputChange}
                 className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"                           
               />
-              <input
+              <select
                 type="text"
                 name="class"
                 placeholder="Class"
                 required
                 onChange={handleInputChange}
                 className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"              
-              />
+              >
+                  <option value="Choose">Choose Your Class</option>
+                  <option value="BCA1">BCA1</option>
+                  <option value="BCA2">BCA2</option>
+                  <option value="BCA3">BCA3</option>
+                  <option value="MCA1">MCA1</option>
+                  <option value="MCA3">MCA3</option>
+              </select>
               <input
-                type="text"
+                type="number"
                 name="roll"
                 placeholder="Roll No"
                 required
