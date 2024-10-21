@@ -19,24 +19,21 @@ const Photos = () => {
         { src: img6, alt: "Anchoring" }
     ];
 
-    // Handler to close the modal when clicking outside the image
     const closeModal = (e) => {
         if (e.target.classList.contains('modal-overlay')) {
             setSelectedPhoto(null);
         }
     };
 
-    // Block scrolling on the entire webpage (html and body) when modal is open
     useEffect(() => {
         if (selectedPhoto) {
             document.body.style.overflow = 'hidden';
-            document.documentElement.style.overflow = 'hidden'; // Prevent full page scrolling in all browsers
+            document.documentElement.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'auto';
-            document.documentElement.style.overflow = 'auto'; // Reset scrolling when modal is closed
+            document.documentElement.style.overflow = 'auto';
         }
 
-        // Cleanup to reset scroll behavior when modal is closed or component unmounts
         return () => {
             document.body.style.overflow = 'auto';
             document.documentElement.style.overflow = 'auto';
@@ -69,7 +66,7 @@ const Photos = () => {
                     Event Gallery
                 </h2>
 
-                <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto transition-opacity duration-300 ${selectedPhoto ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
                     {eventPhotos.map((photo, index) => (
                         <div
                             key={index}
@@ -81,7 +78,7 @@ const Photos = () => {
                                     src={photo.src}
                                     alt={photo.alt}
                                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-                                    loading="lazy" // Lazy loading for images
+                                    loading="lazy"
                                 />
                             </div>
                             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -92,32 +89,32 @@ const Photos = () => {
                         </div>
                     ))}
                 </div>
-
-                {/* Modal */}
-                {selectedPhoto && (
-                    <div 
-                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 modal-overlay" 
-                        onClick={closeModal}
-                        role="dialog"
-                        aria-modal="true"
-                    >
-                        <div className="relative max-w-4xl w-full">
-                            <button
-                                onClick={() => setSelectedPhoto(null)}
-                                className="absolute -top-12 right-0 text-white hover:text-pink-300 transition-colors"
-                                aria-label="Close photo"
-                            >
-                                <X className="w-8 h-8" />
-                            </button>
-                            <img
-                                src={selectedPhoto.src}
-                                alt={selectedPhoto.alt}
-                                className="w-full h-auto rounded-lg shadow-2xl"
-                            />
-                        </div>
-                    </div>
-                )}
             </div>
+
+            {/* Modal */}
+            {selectedPhoto && (
+                <div 
+                    className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/95 modal-overlay" 
+                    onClick={closeModal}
+                    role="dialog"
+                    aria-modal="true"
+                >
+                    <div className="relative max-w-4xl w-full max-h-[90vh] flex items-center justify-center">
+                        <button
+                            onClick={() => setSelectedPhoto(null)}
+                            className="absolute -top-12 right-0 text-white hover:text-pink-300 transition-colors"
+                            aria-label="Close photo"
+                        >
+                            <X className="w-8 h-8" />
+                        </button>
+                        <img
+                            src={selectedPhoto.src}
+                            alt={selectedPhoto.alt}
+                            className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+                        />
+                    </div>
+                </div>
+            )}
         </section>
     );
 };
