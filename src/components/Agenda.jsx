@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { Clock } from 'lucide-react';
 
 const agendaItems = [
     {
@@ -18,18 +18,7 @@ const agendaItems = [
         time: '🎭 11:00 AM - 1:00 PM',
         title: 'Cultural Performances',
         description: 'Enjoy performances by talented students showcasing music, dance, and drama.',
-        icon: (
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="yellow" // Color the notes yellow
-                className="h-4 w-4"
-            >
-                <path d="M12 3v10.55A4 4 0 1014 17V7h5V3h-7z" />
-            </svg>
-        ),
+        icon: '🎭',
     },
     {
         time: '🍽️ 1:00 PM - 1:30 PM',
@@ -47,7 +36,7 @@ const agendaItems = [
         time: '🎤 2:30 PM - 3:00 PM',
         title: 'Photo Session',
         description: 'Capture memories and meet your seniors and teachers.',
-        icon: '💬',
+        icon: '📸',
     },
     {
         time: '🎊 3:00 PM - 4:30 PM',
@@ -59,47 +48,61 @@ const agendaItems = [
 
 const Agenda = () => {
     return (
-        <section id='agenda' className="bg-gradient-to-b from-[#040024CC] to-[#0b0b22FD] py-10 px-4">
-            <div className="max-w-4xl mx-auto">
-                <h2 className="text-4xl md:text-5xl font-bold mb-12 text-white text-center">
-                    Agenda
+        <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+            {/* Dynamic Background with Stars */}
+            <div className="absolute inset-0">
+                <div className="absolute inset-0 bg-black opacity-50"></div>
+                {[...Array(50)].map((_, i) => (
+                    <div
+                        key={i}
+                        className="absolute animate-twinkle"
+                        style={{
+                            top: `${Math.random() * 100}%`,
+                            left: `${Math.random() * 100}%`,
+                            width: '2px',
+                            height: '2px',
+                            backgroundColor: '#fff',
+                            animationDelay: `${Math.random() * 5}s`,
+                        }}
+                    />
+                ))}
+            </div>
+
+            <div className="relative z-10 container mx-auto px-4 py-16">
+                <h2 id="agenda" className="text-4xl sm:text-5xl font-bold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300">
+                    Event Timeline
                 </h2>
-                <div className="relative">
-                    {/* Vertical line for mobile */}
-                    <div className="absolute left-6 top-0 w-0.5 h-full bg-yellow-400 sm:hidden"></div>
-                    
-                    {/* Vertical line for desktop */}
-                    <div className="hidden sm:block absolute left-6 top-0 w-0.5 h-full bg-yellow-400"></div>
 
-                    {agendaItems.map((item, index) => (
-                        <motion.div
-                            key={index}
-                            className="flex gap-4 mb-8 relative"
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
-                        >
-                            {/* Icon circle */}
-                            <div className="relative z-10">
-                                <div className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center border-2 border-yellow-400">
-                                    <span className="text-xl">{item.icon}</span>
+                <div className="max-w-4xl mx-auto">
+                    <div className="relative">
+                        {/* Timeline line */}
+                        <div className="absolute left-8 top-0 w-0.5 bg-gradient-to-b from-pink-500 to-purple-600 opacity-50" style={{ height: `calc(100% - 12%)` }}></div>
+
+                        {agendaItems.map((item, index) => (
+                            <div key={index} className="flex gap-6 mb-8 relative group">
+                                {/* Icon circle */}
+                                <div className="relative z-10 flex-shrink-0">
+                                    <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform duration-300">
+                                        <span className="text-2xl">{item.icon}</span>
+                                    </div>
+                                </div>
+
+                                {/* Content card */}
+                                <div className="flex-1 bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 shadow-xl transform group-hover:translate-x-2 transition-transform duration-300">
+                                    <div className="flex items-center gap-2 text-pink-300 mb-2">
+                                        <Clock className="w-4 h-4" />
+                                        <span className="font-semibold">{item.time}</span>
+                                    </div>
+                                    <h4 className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-purple-300 mb-2">
+                                        {item.title}
+                                    </h4>
+                                    <p className="text-indigo-100">
+                                        {item.description}
+                                    </p>
                                 </div>
                             </div>
-
-                            {/* Content card */}
-                            <div className="flex-1 bg-gray-800 rounded-lg p-4 shadow-lg border-l-2 border-yellow-400">
-                                <div className="flex items-center gap-2 text-yellow-300 mb-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-clock">
-                                        <circle cx="12" cy="12" r="10"></circle>
-                                        <polyline points="12 6 12 12 16 14"></polyline>
-                                    </svg>
-                                    <span className="font-semibold text-sm">{item.time}</span>
-                                </div>
-                                <h4 className="text-lg font-semibold text-white mb-1">{item.title}</h4>
-                                <p className="text-sm text-gray-300">{item.description}</p>
-                            </div>
-                        </motion.div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>
