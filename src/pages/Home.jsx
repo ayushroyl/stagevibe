@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, Music, Star } from 'lucide-react';
+import { FaWhatsapp } from 'react-icons/fa'; // Import WhatsApp icon from react-icons
 import Modal from './Modal';
 
 const Home = () => {
@@ -12,6 +13,16 @@ const Home = () => {
 
   return (
     <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800">
+      {/* WhatsApp Floating Button */}
+      <a
+        href="https://chat.whatsapp.com/Csffzli2P1B2bOyO9x0Hhe" // Replace with your WhatsApp number
+        target="_blank"
+        rel="noopener noreferrer"
+        className="whatsapp-button"
+        aria-label="Chat with us on WhatsApp"
+      >
+        <FaWhatsapp size={30} />
+      </a>
       {/* Dynamic Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-black opacity-50"></div>
