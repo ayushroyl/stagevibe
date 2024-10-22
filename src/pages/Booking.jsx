@@ -8,13 +8,13 @@ const rows = [
   { row: 'B', seats: 10 },
   { row: 'C', seats: 12 },
   { row: 'D', seats: 12 },
-  { row: 'E', seats: 16 },
-  { row: 'F', seats: 16 },
-  { row: 'G', seats: 16 },
+  { row: 'E', seats: 12 },
+  { row: 'F', seats: 14 },
+  { row: 'G', seats: 14 },
   { row: 'H', seats: 16 },
   { row: 'I', seats: 16 },
   { row: 'J', seats: 16 },
-  { row: 'K', seats: 20 },
+  { row: 'K', seats: 18 },
   { row: 'L', seats: 20 },
 ];
 
