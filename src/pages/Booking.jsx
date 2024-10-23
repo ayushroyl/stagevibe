@@ -247,7 +247,7 @@ const Booking = () => {
     const seatDetails = Array.from(selectedSeats).join(', ');
     const transactionNote = `Seat ${seatDetails}, ${userNames}, ${userClasses}, ${userRolls}, ${userMobiles}`;
     
-    const upiUrl = `upi://pay?pa=7255071097@ybl&am=${totalAmount}&tn=${encodeURIComponent(transactionNote)}&cu=INR&url=${encodeURIComponent('https://stagevibe.vercel.app')}`;
+    const upiUrl = `upi://pay?pa=ayushroy0753@okhdfcbank&am=${totalAmount}&tn=${encodeURIComponent(transactionNote)}&cu=INR&url=${encodeURIComponent('https://stagevibe.vercel.app')}`;
   
     // Navigate to the Payment page with UPI URL
     navigate('/payment', {
