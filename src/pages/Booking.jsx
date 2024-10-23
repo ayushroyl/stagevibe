@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Booking.css';
 import { ref, set, push, onValue, remove } from 'firebase/database';
 import database from '../firebase'; // Import Firebase instance
@@ -34,7 +35,8 @@ const Booking = () => {
   const isManualScroll = useRef(false);
   const autoScrollTimeout = useRef(null);
   const [bookedSeats, setBookedSeats] = useState([]);
-  const [pendingSeats, setPendingSeats] = useState([]);
+  const [pendingSeats, setPendingSeats] = useState([]);   
+  const navigate = useNavigate();
 
 
   // Fetch booked and pending seats from Firebase
@@ -140,7 +142,6 @@ const Booking = () => {
     setCurrentSeat('');
     setSelectedSeats(new Set());
     setTotalAmount(0);
-    alert(`You are successfully request for seats: ${Array.from(selectedSeats).join(', ')} after check you details your pending seat becomes booked.`);
   };
 
   const isSeatBooked = (seat) => {
@@ -235,30 +236,33 @@ const Booking = () => {
   };
 
   const handlePayClick = () => {
-    const upiId = '7255071097@ybl'; // Replace with actual UPI ID
-    const seatDetails = `Seat: ${Array.from(selectedSeats).join(', ')}`; // Convert Set to array and join
-  
-    // Ensure you get the user details for each selected seat
+    // Get user details
     const userDetailsArray = Array.from(selectedSeats).map(seat => userDetails[seat]);
-  
     const userNames = userDetailsArray.map(details => details.name).join(', ');
     const userClasses = userDetailsArray.map(details => details.class).join(', ');
     const userRolls = userDetailsArray.map(details => details.roll).join(', ');
     const userMobiles = userDetailsArray.map(details => details.mobile).join(', ');
   
-    const paymentUrl = `upi://pay?pa=${upiId}&am=${totalAmount}&tn=${seatDetails}+Names:${userNames}+Classes:${userClasses}+Rolls:${userRolls}+Mobiles:${userMobiles}`;
+    // Generate dynamic UPI URL with URL encoding
+    const seatDetails = Array.from(selectedSeats).join(', ');
+    const transactionNote = `Seat ${seatDetails}, ${userNames}, ${userClasses}, ${userRolls}, ${userMobiles}`;
+    
+    const upiUrl = `upi://pay?pa=7255071097@ybl&am=${totalAmount}&tn=${encodeURIComponent(transactionNote)}&cu=INR&url=${encodeURIComponent('https://stagevibe.vercel.app')}`;
   
-    // Open payment link
-    window.location.href = paymentUrl;
+    // Navigate to the Payment page with UPI URL
+    navigate('/payment', {
+      state: {
+        upiUrl, // Passing the dynamically generated UPI URL
+      },
+    });
   
     // Call addUser function after payment (optional)
     setTimeout(() => {
       handleAddUser(); // This can be adjusted based on your user confirmation logic
     }, 5000); // Adjust delay as needed
-  };
+  };  
   
   
-
   return (
     <div className="p-2 bg-gradient-to-b from-[#0b0b22FD] to-[#0f1a3dFD] min-h-screen flex flex-col items-center justify-center">
       <h1 className="text-center text-2xl font-bold mb-4">

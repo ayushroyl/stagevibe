@@ -17,6 +17,7 @@ import Admin from './pages/admin';
 import SAdminlogin from './pages/sadminlogin';
 import AdminLogin from './pages/adminlogin';
 import SetSuperAdminPassword from './pages/SetSuperAdminPassword';
+import Payment from './pages/Payment';
 
 const App = () => {
   return (
@@ -32,6 +33,7 @@ const App = () => {
         <Route path='/adminlogin' element={<AdminLogin />} />
         <Route path='/sadminlogin' element={<SAdminlogin />} />
         <Route path='/SetSuperAdminPassword' element={<SetSuperAdminPassword />} />
+        <Route path='/payment' element={<Payment />} />
       </Routes>
 
       <Footer />
