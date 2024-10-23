@@ -118,7 +118,7 @@ const Booking = () => {
     if (validateInput()) {
       if (currentSeat && userDetails[currentSeat]) {
         setSelectedSeats((prev) => new Set(prev).add(currentSeat));
-        setTotalAmount((prev) => prev + 1); // Assuming each seat costs ₹250
+        setTotalAmount((prev) => prev + 249); // Assuming each seat costs ₹250
         setCurrentSeat('');
       }
       setIsPopupOpen(false);
