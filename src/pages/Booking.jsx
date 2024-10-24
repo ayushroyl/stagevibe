@@ -25,6 +25,7 @@ const Booking = () => {
   const [selectedSeats, setSelectedSeats] = useState(new Set());
   const [userDetails, setUserDetails] = useState({});
   const [totalAmount, setTotalAmount] = useState(0);
+  const [varAmount, setVarAmount] = useState(0);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [mobileError, setMobileError] = useState('');
   const [rollError, setRollError] = useState('');
@@ -116,9 +117,17 @@ const Booking = () => {
 
   const addSeatToBooking = () => {
     if (validateInput()) {
+      if (userDetails[currentSeat]?.class == 'BCA1'){
+        setVarPaymemt(249);
+      } else if (['BCA2', 'BCA3'].includes(userDetails[currentSeat]?.class)){
+        setVarPaymemt(299);
+      } else {
+        setVarPaymemt(349);
+      }
+        
       if (currentSeat && userDetails[currentSeat]) {
         setSelectedSeats((prev) => new Set(prev).add(currentSeat));
-        setTotalAmount((prev) => prev + 249); // Assuming each seat costs ₹250
+        setTotalAmount((prev) => prev + varPayment); // Assuming each seat costs ₹250
         setCurrentSeat('');
       }
       setIsPopupOpen(false);
