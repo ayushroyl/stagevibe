@@ -7,10 +7,13 @@ const SuperAdminDashboard = () => {
 
     const navigate = useNavigate();
     const isSuperAdmin = localStorage.getItem('currentSuperAdmin') !== null;
-    let userInput = prompt("Please enter access code:");
+
 
 
     useEffect(() => {
+        let userInput = prompt("Please enter access code:");
+
+
         if (!isSuperAdmin || userInput!=125795 ) {
             navigate('/sadminlogin');
         }
@@ -170,6 +173,13 @@ const SuperAdminDashboard = () => {
         }, 3000); // Show for 3 seconds
     };
 
+    const handleLogout = () => {
+        // Clear the currentAdmin from localStorage
+        localStorage.removeItem('currentSuperAdmin');
+        // Optionally, you can add additional logout logic here
+        console.log('Logged out successfully');
+      };
+
     // Render approved users and pending users
     const approvedUsers = users.filter((user) => user.approved);
     const pendingUsers = users.filter((user) => !user.approved);
@@ -183,6 +193,13 @@ const SuperAdminDashboard = () => {
                 <h2 className="text-xl font-semibold text-gray-600 mb-6">
                     Welcome {superadminName}
                 </h2>
+                <button 
+        onClick={handleLogout} 
+        className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
+      >
+        Logout
+      </button>
+    
                 <div className="flex justify-center mt-8">
                     <a
                         className="font-medium bg-green-800 border-2 border-red-600 rounded-md text-white py-2 px-4 hover:bg-green-700 transition-colors"
@@ -247,7 +264,7 @@ const SuperAdminDashboard = () => {
                         <input
                             type="text"
                             name="seatNo"
-                            value={userForm.seatNo}
+                            value={userForm.seatNo.toUpperCase()}
                             onChange={handleUserInputChange}
                             placeholder="Seat No (Pending)"
                             className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"

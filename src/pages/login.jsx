@@ -56,7 +56,7 @@ const Login = () => {
               name="username"
               placeholder="Username"
               value={username}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
               required
               className="block w-full px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-300"
             />
@@ -72,7 +72,7 @@ const Login = () => {
               name="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               required
               className="block w-full px-4 py-3 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-300"
             />

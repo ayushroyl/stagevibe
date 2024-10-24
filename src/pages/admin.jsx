@@ -6,11 +6,17 @@ import database from '../firebase'; // Import Firebase instance
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const isAdmin = localStorage.getItem('currentAdmin') !== null;
-  let userInput = prompt("Please enter access code:");
+
 
 
     useEffect(() => {
+
+let userInput = prompt("Please enter access code:");
+
+
         if (!isAdmin || userInput!=1256) {
+
+
             navigate('/adminlogin');
         }
     }, [isAdmin, navigate]);
@@ -70,7 +76,6 @@ const handlePerformerInputChange = (e) => {
     const newUserRef = push(usersRef);
     const newUser = { ...userForm, id: newUserRef.key, approved: false };
     set(newUserRef, newUser);
-    setUsers((prevUsers) => [newUser, ...prevUsers]);
     showPopup(`User ${userForm.name} added successfully.`);
     setUserForm({ name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: 'cash' });
   };
@@ -170,7 +175,7 @@ const handlePerformerInputChange = (e) => {
             <input
               type="text"
               name="seatNo"
-              value={userForm.seatNo}
+              value={userForm.seatNo.toUpperCase()}
               onChange={handleUserInputChange}
               placeholder="Seat No"
               className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
