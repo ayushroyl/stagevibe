@@ -118,16 +118,16 @@ const Booking = () => {
   const addSeatToBooking = () => {
     if (validateInput()) {
       if (userDetails[currentSeat]?.class == 'BCA1'){
-        setVarPaymemt(249);
+        setVarAmount(249);
       } else if (['BCA2', 'BCA3'].includes(userDetails[currentSeat]?.class)){
-        setVarPaymemt(299);
+        setVarAmount(299);
       } else {
-        setVarPaymemt(349);
+        setVarAmount(349);
       }
         
       if (currentSeat && userDetails[currentSeat]) {
         setSelectedSeats((prev) => new Set(prev).add(currentSeat));
-        setTotalAmount((prev) => prev + varPayment); // Assuming each seat costs ₹250
+        setTotalAmount((prev) => prev + varAmount); // Assuming each seat costs ₹250
         setCurrentSeat('');
       }
       setIsPopupOpen(false);
