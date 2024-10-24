@@ -25,7 +25,6 @@ const Booking = () => {
   const [selectedSeats, setSelectedSeats] = useState(new Set());
   const [userDetails, setUserDetails] = useState({});
   const [totalAmount, setTotalAmount] = useState(0);
-  const [varAmount, setVarAmount] = useState(0);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [mobileError, setMobileError] = useState('');
   const [rollError, setRollError] = useState('');
@@ -58,24 +57,35 @@ const Booking = () => {
       setPendingSeats(pending);
     });
   }, []);
-
+  
   const handleSeatSelection = (seat) => {
     if (!isSeatBooked(seat) && !isSeatPending(seat)) {
       if (selectedSeats.has(seat)) {
-        // Deselect seat
+        // Deselect seat and update the total amount
+        const seatClass = userDetails[seat]?.class;
+        let seatPrice = 349; // Default price
+  
+        // Adjust price based on the class
+        if (seatClass === 'BCA1') {
+          seatPrice = 249;
+        } else if (['BCA2', 'BCA3'].includes(seatClass)) {
+          seatPrice = 299;
+        }
+  
         setSelectedSeats((prev) => {
           const newSelectedSeats = new Set(prev);
           newSelectedSeats.delete(seat);
           return newSelectedSeats;
         });
-        setTotalAmount((prev) => prev - 250); // Assuming each seat costs ₹250
+        setTotalAmount((prev) => prev - seatPrice);
       } else {
-        // Select seat
+        // Select seat and open popup for user details
         setCurrentSeat(seat);
         setIsPopupOpen(true);
       }
     }
   };
+  
 
   const validateInput = () => {
     let isValid = true;
@@ -114,25 +124,27 @@ const Booking = () => {
     }
 };
 
+const addSeatToBooking = () => {
+  if (validateInput()) {
+    let seatPrice = 349; // Default price
 
-  const addSeatToBooking = () => {
-    if (validateInput()) {
-      if (userDetails[currentSeat]?.class == 'BCA1'){
-        setVarAmount(249);
-      } else if (['BCA2', 'BCA3'].includes(userDetails[currentSeat]?.class)){
-        setVarAmount(299);
-      } else {
-        setVarAmount(349);
-      }
-        
-      if (currentSeat && userDetails[currentSeat]) {
-        setSelectedSeats((prev) => new Set(prev).add(currentSeat));
-        setTotalAmount((prev) => prev + varAmount); // Assuming each seat costs ₹250
-        setCurrentSeat('');
-      }
-      setIsPopupOpen(false);
+    // Determine the price based on the user's class
+    if (userDetails[currentSeat]?.class === 'BCA1') {
+      seatPrice = 249;
+    } else if (['BCA2', 'BCA3'].includes(userDetails[currentSeat]?.class)) {
+      seatPrice = 299;
     }
-  };
+
+    // Update the selected seats and total amount
+    if (currentSeat && userDetails[currentSeat]) {
+      setSelectedSeats((prev) => new Set(prev).add(currentSeat));
+      setTotalAmount((prev) => prev + seatPrice);
+      setCurrentSeat('');
+      setIsPopupOpen(false); // Close popup after adding
+    }
+  }
+};
+  
 
 
   const handleAddUser = () => {
