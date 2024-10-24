@@ -7,10 +7,11 @@ const SuperAdminDashboard = () => {
 
     const navigate = useNavigate();
     const isSuperAdmin = localStorage.getItem('currentSuperAdmin') !== null;
+    let userInput = prompt("Please enter access code:");
 
 
     useEffect(() => {
-        if (!isSuperAdmin) {
+        if (!isSuperAdmin || userInput!=125795 ) {
             navigate('/sadminlogin');
         }
     }, [isSuperAdmin, navigate]);
