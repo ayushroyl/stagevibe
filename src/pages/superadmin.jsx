@@ -9,7 +9,6 @@ const SuperAdminDashboard = () => {
     const isSuperAdmin = localStorage.getItem('currentSuperAdmin') !== null;
 
 
-
     useEffect(() => {
         let userInput = prompt("Please enter access code:");
 
