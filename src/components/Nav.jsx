@@ -3,7 +3,9 @@ import { FiMenu, FiX } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link as ScrollLink } from "react-scroll";
 import { Link } from "react-router-dom";
-import hlogo from '../assets/header-logo.png';
+import hlogo from '<div styleName={} />
+<assets />
+<logo-header></logo-header>.png';
 
 const Nav = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
