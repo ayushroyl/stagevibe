@@ -9,7 +9,7 @@ const AdminDashboard = () => {
 
 
 
-    useEffect(() => {
+useEffect(() => {
 
 let userInput = prompt("Please enter access code:");
 
