@@ -6,15 +6,16 @@ import database from '../firebase'; // Import Firebase instance
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const isAdmin = localStorage.getItem('currentAdmin') !== null;
+  let userInput = prompt("Please enter access code:");
 
 
     useEffect(() => {
-        if (!isAdmin) {
+        if (!isAdmin || userInput!=1256) {
             navigate('/adminlogin');
         }
     }, [isAdmin, navigate]);
 
-  const [adminName, setAdminName] = useState('Admin');
+  const adminName = JSON.parse(localStorage.getItem('currentAdmin')).username;
   const [users, setUsers] = useState([]);
   const [performers, setPerformers] = useState([]);
 
