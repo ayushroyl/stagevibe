@@ -5,7 +5,6 @@ import database from '../firebase'; // Import Firebase instance
 
 const Login = () => {
   const navigate = useNavigate(); // Initialize navigate hook
-
   const [users, setUsers] = useState([]);
   const [username, setUsername] = useState(''); // Define adminUsername state
   const [password, setPassword] = useState(''); // Define adminPassword state
