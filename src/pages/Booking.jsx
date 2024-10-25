@@ -4,6 +4,7 @@ import './Booking.css';
 import { ref, set, push, onValue, remove } from 'firebase/database';
 import database from '../firebase'; // Import Firebase instance
 
+
 const rows = [
   { row: 'A', seats: 10 },
   { row: 'B', seats: 10 },
