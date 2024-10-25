@@ -6,8 +6,8 @@ import database from '../firebase'; // Import Firebase instance
 
 
 const rows = [
-  { row: 'A', seats: 10 },
-  { row: 'B', seats: 10 },
+  //{ row: 'A', seats: 10 },
+// { row: 'B', seats: 10 },
   { row: 'C', seats: 12 },
   { row: 'D', seats: 12 },
   { row: 'E', seats: 12 },
