@@ -357,13 +357,13 @@ const SuperAdminDashboard = () => {
                 </div>
                 {/* Display Admins */}
                 <div className="mb-10">
-                    <h3 className="text-2xl font-bold mb-4 text-black">Admins</h3>
+                    <h3 className="text-2xl object-cover font-bold mb-4 text-black">Admins</h3>
                     {admins.length > 0 ? (
                         <ul className="space-y-4">
                             {admins.map((admin) => (
                                 <li key={admin.id} className="flex justify-between items-center p-4 bg-gray-500 font-bold rounded-md shadow-md">
-                                    <span className="text-black">{admin.username}</span>
-                                    <span className='text-black'>{admin.password}</span>
+                                    <span className="text-black overflow-hidden">{admin.username}</span>
+                                    <span className='text-black overflow-hidden'>{admin.password}</span>
                                     <button
                                         onClick={() => handleDeleteAdmin(admin.id)}
                                         className="bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 transition"
@@ -468,7 +468,12 @@ const SuperAdminDashboard = () => {
                                         >
                                             Approve
                                         </button>
-                                        
+                                        <button 
+                                            onClick={() => handleEditUser(user)} 
+                                            className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600 transition"
+                                        >
+                                            Edit
+                                        </button>
                                         <button
                                             onClick={() => handleDeleteUser(user.id)}
                                             className="bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 transition"
@@ -482,6 +487,88 @@ const SuperAdminDashboard = () => {
                         <p className="text-black">No pending users.</p>
                     )}
                 </div>
+                {/* Edit User Form (conditional rendering) */}
+                {editingUser && (
+                    <div className="mt-10">
+                        <h3 className="text-2xl font-bold mb-4 text-black">Edit User</h3>
+                        <form onSubmit={(e) => { e.preventDefault(); handleSaveEditUser(); }} className="grid grid-cols-2 gap-4">
+                            <input
+                                type="text"
+                                name="name"
+                                value={userForm.name}
+                                onChange={handleUserInputChange}
+                                placeholder="Name"
+                                className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                required
+                            />
+                            <select
+                                name="class"
+                                value={userForm.class}
+                                onChange={handleUserInputChange}
+                                className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                required
+                            >
+                                <option value="">Select Class</option>
+                                <option value="BCA1">BCA1</option>
+                                <option value="BCA2">BCA2</option>
+                                <option value="BCA3">BCA3</option>
+                                <option value="MCA1">MCA1</option>
+                                <option value="MCA3">MCA3</option>
+                            </select>
+                            <input
+                                type="text"
+                                name="roll"
+                                value={userForm.roll}
+                                onChange={handleUserInputChange}
+                                placeholder="Roll"
+                                className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                required
+                            />
+                            <input
+                                type="text"
+                                name="mobile"
+                                value={userForm.mobile}
+                                onChange={handleUserInputChange}
+                                placeholder="Mobile"
+                                className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                required
+                            />
+                            <input
+                                type="text"
+                                name="seatNo"
+                                value={userForm.seatNo}
+                                onChange={handleUserInputChange}
+                                placeholder="Seat No"
+                                className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                required
+                            />
+                            <select
+                                name="paymentMode"
+                                value={userForm.paymentMode}
+                                onChange={handleUserInputChange}
+                                className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                required
+                            >
+                                <option value="">Select Mode</option>
+                                <option value="cash">Cash</option>
+                                <option value="online">Online</option>
+                            </select>
+                            <button
+                                type="submit"
+                                className="col-span-2 bg-green-500 text-white py-2 rounded-md hover:bg-green-600 transition"
+                            >
+                                Save Changes
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setEditingUser(null)}
+                                className="col-span-2 bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600 transition"
+                            >
+                                Cancel
+                            </button>
+                        </form>
+                    </div>
+                )}
             </div>
         </div>
     );
