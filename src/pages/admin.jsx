@@ -6,19 +6,22 @@ import database from '../firebase'; // Import Firebase instance
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const currentAdmin = JSON.parse(localStorage.getItem('currentAdmin') || 'null');
+  const [accessGranted, setAccessGranted] = useState(false);
 
   useEffect(() => {
     if (!currentAdmin) {
       navigate('/adminlogin');
-    } else {
+    } else if (!accessGranted) {
       const userInput = prompt("Please enter access code:");
-      if (userInput !== '1256') {
+      if (userInput === '1256') {
+        setAccessGranted(true);
+      } else {
         navigate('/adminlogin');
       }
     }
-  }, [currentAdmin, navigate]);
+  }, [currentAdmin, accessGranted, navigate]);
 
-  const adminName = currentAdmin ? currentAdmin.username : '';
+  const adminName = currentAdmin?.username || '';
   const [users, setUsers] = useState([]);
   const [performers, setPerformers] = useState([]);
 
