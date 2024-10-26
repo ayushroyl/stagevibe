@@ -247,7 +247,7 @@ const handlePerformerInputChange = (e) => {
           </form>
         </div>
 
-{/* Display Approved Users */}
+        {/* Display Approved Users */}
                 <div className="mb-10">
                     <h3 className="text-2xl font-bold mb-4 text-black">Approved Users</h3>
                     {approvedUsers.length > 0 ? (
@@ -322,32 +322,7 @@ const handlePerformerInputChange = (e) => {
             </div>
         </div>
 
-    //disply perfomers
-        <div>
-          <h3 className="text-2xl font-bold mb-4 text-blue-700">Selected Performers</h3>
-          {performers.length > 0 ? (
-            <ul className="space-y-4">
-              {performers.map((performer) => (
-                <li key={performer.id} className="flex justify-between items-center p-4 bg-cyan-600 rounded-md shadow-md">
-                  <div className='text-black'>
-                    <p className='font-medium'>Name: {performer.name}</p>
-                    <img src={performer.imgUrl} alt={performer.name} className="w-20 h-20 object-cover mt-2 rounded-md" />
-                  </div>
-                  {/* <div>
-                    <button
-                      onClick={() => handleDeletePerformer(performer.id)}
-                      className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
-                    >
-                      Delete
-                    </button>
-                  </div> */}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className='font-bold text-orange-500'>No performers available.</p>
-          )}
-        </div>
+    
       </div>
     </div>
   );
