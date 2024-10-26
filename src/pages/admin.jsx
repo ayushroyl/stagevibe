@@ -5,7 +5,7 @@ import database from '../firebase'; // Import Firebase instance
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const isAdmin = localStorage.getItem('currentAdmin') !== null;
+  const isAdmin = localStorage.getItem('currentAdmin');
 
 
 
@@ -24,9 +24,6 @@ let userInput = prompt("Please enter access code:");
   const adminName = JSON.parse(localStorage.getItem('currentAdmin')).username;
   const [users, setUsers] = useState([]);
   const [performers, setPerformers] = useState([]);
-  if (!adminName) {
-    navigate('/adminlogin');
-  }
 
   const [userForm, setUserForm] = useState({
     name: '',
