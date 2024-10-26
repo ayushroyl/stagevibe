@@ -279,7 +279,7 @@ const SuperAdminDashboard = () => {
                                 <input
                                     type="text"
                                     name="seatNo"
-                                    value={userForm.seatNo.toUpperCase()}
+                                    value={userForm.seatNo ? userForm.seatNo.toUpperCase() : ""}
                                     onChange={handleUserInputChange}
                                     placeholder="Seat No"
                                     className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
