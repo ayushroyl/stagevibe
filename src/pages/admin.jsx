@@ -322,7 +322,7 @@ const handlePerformerInputChange = (e) => {
             </div>
         </div>
 
-        {/* Display Performers */}
+    //disply perfomers
         <div>
           <h3 className="text-2xl font-bold mb-4 text-blue-700">Selected Performers</h3>
           {performers.length > 0 ? (
