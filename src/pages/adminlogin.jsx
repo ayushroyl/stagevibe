@@ -84,17 +84,6 @@ const AdminLogin = () => {
             Login
           </button>
         </form>
-
-        {/* Are you a SuperAdmin? */}
-        <div className="mt-8 text-center">
-          <p className="text-gray-400">Are you a SuperAdmin?</p>
-          <Link
-            to="/sadminlogin"
-            className="text-teal-400 hover:text-teal-500 font-medium transition duration-300"
-          >
-            Super Admin Login
-          </Link>
-        </div>
       </div>
     </div>
   );
