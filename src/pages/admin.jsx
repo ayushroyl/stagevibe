@@ -7,12 +7,8 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const currentAdmin = JSON.parse(localStorage.getItem('currentAdmin') || 'null');
 
-
-
-useEffect(() => {
-
-let userInput = prompt("Please enter access code:");
-  if (!currentAdmin) {
+  useEffect(() => {
+    if (!currentAdmin) {
       navigate('/adminlogin');
     } else {
       const userInput = prompt("Please enter access code:");
@@ -22,7 +18,7 @@ let userInput = prompt("Please enter access code:");
     }
   }, [currentAdmin, navigate]);
 
-  const adminName = JSON.parse(localStorage.getItem('currentAdmin')).username;
+  const adminName = currentAdmin ? currentAdmin.username : '';
   const [users, setUsers] = useState([]);
   const [performers, setPerformers] = useState([]);
 
