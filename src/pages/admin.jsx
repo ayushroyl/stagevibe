@@ -5,7 +5,8 @@ import database from '../firebase'; // Import Firebase instance
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const isAdmin = localStorage.getItem('currentAdmin');
+  const currentAdmin = JSON.parse(localStorage.getItem('currentAdmin') || 'null'); 
+  const isAdmin = currentAdmin !== null;
 
 
 
