@@ -10,23 +10,20 @@ const SuperAdminDashboard = () => {
 
 
     useEffect(() => {
-        let userInput = prompt("Please enter access code:");
-
-
-        if (!isSuperAdmin || userInput!=125795 ) {
+    if (!isSuperAdmin) {
+            navigate('/sadminlogin');
+        } else {
+        const userInput = prompt("Please enter access code:");
+        if (userInput !== '154236'){
             navigate('/sadminlogin');
         }
+    }
     }, [isSuperAdmin, navigate]);
 
     const superadminName = JSON.parse(localStorage.getItem('currentSuperAdmin')).username;
     const [users, setUsers] = useState([]);
     const [performers, setPerformers] = useState([]);
     const [admins, setAdmins] = useState([]);
-    if (!superadminName) {
-    return null;
-    }
-
-
 
 
     const [userForm, setUserForm] = useState({
