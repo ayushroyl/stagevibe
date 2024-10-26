@@ -22,6 +22,9 @@ const SuperAdminDashboard = () => {
     const [users, setUsers] = useState([]);
     const [performers, setPerformers] = useState([]);
     const [admins, setAdmins] = useState([]);
+    if (!superadminName) {
+    return null;
+    }
 
 
 
