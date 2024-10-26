@@ -4,24 +4,24 @@ import { ref, set, push, onValue, remove } from 'firebase/database';
 import database from '../firebase'; // Import Firebase instance
 
 const AdminDashboard = () => {
-    const navigate = useNavigate();
-    const currentSuperAdmin = JSON.parse(localStorage.getItem('currentSuperAdmin') || 'null');
-    const [accessGranted, setAccessGranted] = useState(false);
+  const navigate = useNavigate();
+  const currentAdmin = JSON.parse(localStorage.getItem('currentAdmin') || 'null');
+  const [accessGranted, setAccessGranted] = useState(false);
 
-    useEffect(() => {
-        if (!currentSuperAdmin) {
-            navigate('/sadminlogin');
-        } else if (!accessGranted) {
-            const userInput = prompt("Please enter access code:");
-            if (userInput === '154236') {
-                setAccessGranted(true);
-            } else {
-                navigate('/sadminlogin');
-            }
-        }
-    }, [currentSuperAdmin, accessGranted, navigate]);
+  useEffect(() => {
+    if (!currentAdmin) {
+      navigate('/adminlogin');
+    } else if (!accessGranted) {
+      const userInput = prompt("Please enter access code:");
+      if (userInput === '1256') {
+        setAccessGranted(true);
+      } else {
+        navigate('/adminlogin');
+      }
+    }
+  }, [currentAdmin, accessGranted, navigate]);
 
-  const superadminName = currentSuperAdmin?.username || '';
+  const adminName = currentAdmin?.username || '';
   const [users, setUsers] = useState([]);
   const [performers, setPerformers] = useState([]);
 
