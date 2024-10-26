@@ -25,7 +25,7 @@ let userInput = prompt("Please enter access code:");
   const [users, setUsers] = useState([]);
   const [performers, setPerformers] = useState([]);
   if (!adminName) {
-    return null;
+    navigate('/adminlogin');
   }
 
   const [userForm, setUserForm] = useState({
