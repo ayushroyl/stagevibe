@@ -319,8 +319,7 @@ const AdminDashboard = () => {
             <p className="text-black">No pending users.</p>
           )}
         </div>
-      </div>
-      {/* Display Performers */}
+              {/* Display Performers */}
       <div>
         <h3 className="text-2xl font-bold mb-4 text-blue-700">Selected Performers</h3>
         {performers.length > 0 ? (
@@ -345,6 +344,7 @@ const AdminDashboard = () => {
         ) : (
           <p className='font-bold text-orange-500'>No performers available.</p>
         )}
+      </div>
       </div>
     </div>
   )
