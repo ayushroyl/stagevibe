@@ -6,7 +6,10 @@ import database from '../firebase'; // Import Firebase instance
 const SuperAdminDashboard = () => {
     const navigate = useNavigate();
     const isSuperAdmin = localStorage.getItem('currentSuperAdmin') !== null;
-    const [accessGranted, setAccessGranted] = useState(false);
+
+    const [accessGranted, setAccessGranted] = useState(
+        JSON.parse(localStorage.getItem('superAdminAccessGranted')) || false
+    );
 
     useEffect(() => {
         if (!isSuperAdmin) {
@@ -15,6 +18,7 @@ const SuperAdminDashboard = () => {
             const userInput = prompt("Please enter access code:");
             if (userInput === '154236') {
                 setAccessGranted(true);
+                localStorage.setItem('superAdminAccessGranted', JSON.stringify(true));
             } else {
                 navigate('/sadminlogin');
             }
