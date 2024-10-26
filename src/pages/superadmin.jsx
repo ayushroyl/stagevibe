@@ -5,27 +5,26 @@ import database from '../firebase'; // Import Firebase instance
 
 const SuperAdminDashboard = () => {
     const navigate = useNavigate();
-    const isSuperAdmin = localStorage.getItem('currentSuperAdmin') !== null;
-
+    const currentSuperAdmin = JSON.parse(localStorage.getItem('currentSuperAdmin') || 'null');
     const [accessGranted, setAccessGranted] = useState(
-        JSON.parse(localStorage.getItem('superAdminAccessGranted')) || false
+        JSON.parse(localStorage.getItem('accessGranted') || 'false')
     );
 
     useEffect(() => {
-        if (!isSuperAdmin) {
+        if (!currentSuperAdmin) {
             navigate('/sadminlogin');
         } else if (!accessGranted) {
             const userInput = prompt("Please enter access code:");
             if (userInput === '154236') {
                 setAccessGranted(true);
-                localStorage.setItem('superAdminAccessGranted', JSON.stringify(true));
+                localStorage.setItem('accessGranted', true);
             } else {
                 navigate('/sadminlogin');
             }
         }
-    }, [isSuperAdmin, accessGranted, navigate]);
+    }, [currentSuperAdmin, accessGranted, navigate]);
 
-    const superadminName = JSON.parse(localStorage.getItem('currentSuperAdmin')).username;
+    const superadminName = currentSuperAdmin?.username || '';
     const [users, setUsers] = useState([]);
     const [performers, setPerformers] = useState([]);
     const [admins, setAdmins] = useState([]);
