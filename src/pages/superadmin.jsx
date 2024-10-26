@@ -4,21 +4,22 @@ import { ref, set, push, onValue, remove } from 'firebase/database';
 import database from '../firebase'; // Import Firebase instance
 
 const SuperAdminDashboard = () => {
-
     const navigate = useNavigate();
     const isSuperAdmin = localStorage.getItem('currentSuperAdmin') !== null;
-
+    const [accessGranted, setAccessGranted] = useState(false);
 
     useEffect(() => {
-    if (!isSuperAdmin) {
+        if (!isSuperAdmin) {
             navigate('/sadminlogin');
-        } else {
-        const userInput = prompt("Please enter access code:");
-        if (userInput !== '154236'){
-            navigate('/sadminlogin');
+        } else if (!accessGranted) {
+            const userInput = prompt("Please enter access code:");
+            if (userInput === '154236') {
+                setAccessGranted(true);
+            } else {
+                navigate('/sadminlogin');
+            }
         }
-    }
-    }, [isSuperAdmin, navigate]);
+    }, [isSuperAdmin, accessGranted, navigate]);
 
     const superadminName = JSON.parse(localStorage.getItem('currentSuperAdmin')).username;
     const [users, setUsers] = useState([]);
@@ -350,7 +351,54 @@ const SuperAdminDashboard = () => {
                         </button>
                     </form>
                 </div>
+                {/* Display Admins */}
+                <div className="mb-10">
+                    <h3 className="text-2xl font-bold mb-4 text-black">Admins</h3>
+                    {admins.length > 0 ? (
+                        <ul className="space-y-4">
+                            {admins.map((admin) => (
+                                <li key={admin.id} className="flex justify-between items-center p-4 bg-gray-500 font-bold rounded-md shadow-md">
+                                    <span className="text-black">User: {admin.username}</span>
+                                    <span className='text-black'>Pass: {admin.password}</span>
+                                    <button
+                                        onClick={() => handleDeleteAdmin(admin.id)}
+                                        className="bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 transition"
+                                    >
+                                        Delete
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>) : (
+                        <p className="text-black">No Admins.</p>
+                    )}
+                </div>
+                {/* Display Performers */}
+                <div className="mb-10">
 
+                    <h3 className="text-2xl font-bold mb-4 text-blue-700">Selected Performers</h3>
+                    {performers.length > 0 ? (
+                        <ul className="space-y-4">
+                            {performers.map((performer) => (
+                                <li key={performer.id} className="flex justify-between items-center p-4 bg-cyan-600 rounded-md shadow-md">
+                                    <div className='text-black'>
+                                        <p><strong>Name:</strong> {performer.name}</p>
+                                        <img src={performer.imgUrl} alt={performer.name} className="w-20 h-20 object-cover mt-2" />
+                                    </div>
+                                    <div>
+                                        <button
+                                            onClick={() => handleDeletePerformer(performer.id)}
+                                            className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className='text-red-500'>No performers available.</p>
+                    )}
+                </div>
                 {/* Display Approved Users */}
                 <div className="mb-10">
                     <h3 className="text-2xl font-bold mb-4 text-black">Approved Users</h3>
@@ -427,56 +475,6 @@ const SuperAdminDashboard = () => {
                             ))}
                         </ul>) : (
                         <p className="text-black">No pending users.</p>
-                    )}
-                </div>
-
-                {/* Display Performers */}
-                <div className="mb-10">
-
-                    <h3 className="text-2xl font-bold mb-4 text-blue-700">Selected Performers</h3>
-                    {performers.length > 0 ? (
-                        <ul className="space-y-4">
-                            {performers.map((performer) => (
-                                <li key={performer.id} className="flex justify-between items-center p-4 bg-cyan-600 rounded-md shadow-md">
-                                    <div className='text-black'>
-                                        <p><strong>Name:</strong> {performer.name}</p>
-                                        <img src={performer.imgUrl} alt={performer.name} className="w-20 h-20 object-cover mt-2" />
-                                    </div>
-                                    <div>
-                                        <button
-                                            onClick={() => handleDeletePerformer(performer.id)}
-                                            className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p className='text-red-500'>No performers available.</p>
-                    )}
-                </div>
-
-                {/* Display Admins */}
-                <div className="mb-10">
-                    <h3 className="text-2xl font-bold mb-4 text-black">Admins</h3>
-                    {admins.length > 0 ? (
-                        <ul className="space-y-4">
-                            {admins.map((admin) => (
-                                <li key={admin.id} className="flex justify-between items-center p-4 bg-gray-500 font-bold rounded-md shadow-md">
-                                    <span className="text-black">User: {admin.username}</span>
-                                    <span className='text-black'>Pass: {admin.password}</span>
-                                    <button
-                                        onClick={() => handleDeleteAdmin(admin.id)}
-                                        className="bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 transition"
-                                    >
-                                        Delete
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>) : (
-                        <p className="text-black">No Admins.</p>
                     )}
                 </div>
             </div>
