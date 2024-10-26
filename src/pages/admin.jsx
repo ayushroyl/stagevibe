@@ -24,6 +24,9 @@ let userInput = prompt("Please enter access code:");
   const adminName = JSON.parse(localStorage.getItem('currentAdmin')).username;
   const [users, setUsers] = useState([]);
   const [performers, setPerformers] = useState([]);
+  if (!adminName) {
+    return null;
+  }
 
   const [userForm, setUserForm] = useState({
     name: '',
