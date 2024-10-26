@@ -64,7 +64,7 @@ const AdminDashboard = () => {
     setUserForm({ ...userForm, [name]: value });
   };
 
-const handlePerformerInputChange = (e) => {
+  const handlePerformerInputChange = (e) => {
     const { name, value } = e.target;
     setPerformerForm({ ...performerForm, [name]: value });
   };
@@ -114,25 +114,25 @@ const handlePerformerInputChange = (e) => {
     }, 3000); // Show for 3 seconds
   };
   // Function to logout admin and claer localstorage
-    const handleLogout = () => {
-        // Clear the currentAdmin from localStorage
-        localStorage.removeItem('currentAdmin');
-        // Optionally, you can add additional logout logic here
-        console.log('Logged out successfully');
-      };
-      // Render approved users and pending users
-    const approvedUsers = users.filter((user) => user.approved);
-    const pendingUsers = users.filter((user) => !user.approved);
+  const handleLogout = () => {
+    // Clear the currentAdmin from localStorage
+    localStorage.removeItem('currentAdmin');
+    // Optionally, you can add additional logout logic here
+    console.log('Logged out successfully');
+  };
+  // Render approved users and pending users
+  const approvedUsers = users.filter((user) => user.approved);
+  const pendingUsers = users.filter((user) => !user.approved);
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-8">Admin Dashboard</h1>
         <h2 className="text-xl font-semibold text-gray-600 mb-6">Welcome {adminName}</h2>
-        <button 
-        onClick={handleLogout} 
-        className="bg-red-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
+        <button
+          onClick={handleLogout}
+          className="bg-red-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
         >
-        Logout
+          Logout
         </button>
 
         {/* Display the message */}
@@ -248,26 +248,26 @@ const handlePerformerInputChange = (e) => {
         </div>
 
         {/* Display Approved Users */}
-                <div className="mb-10">
-                    <h3 className="text-2xl font-bold mb-4 text-black">Approved Users</h3>
-                    {approvedUsers.length > 0 ? (
-                        <ul className="space-y-4">
-                            {approvedUsers.map((user) => (
-                                <li
-                                    key={user.id}
-                                    className={`flex justify-between items-center p-4 rounded-md font-medium shadow-md ${user.approved ? 'bg-green-400' : 'bg-red-400'
-                                        }`}
-                                >
-                                    <div className='text-black'>
-                                        <p><strong>Name:</strong> {user.name}</p>
-                                        <p><strong>Class:</strong> {user.class}</p>
-                                        <p><strong>Roll:</strong> {user.roll}</p>
-                                        <p><strong>Mobile:</strong> {user.mobile}</p>
-                                        <p><strong>Seat No:</strong>{user.seatNo}</p>
-                                        <p><strong>Payment Mode:</strong> {user.paymentMode}</p>
-                                        <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
-                                    </div>
-{/*                                     <div className='flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0'>
+        <div className="mb-10">
+          <h3 className="text-2xl font-bold mb-4 text-black">Approved Users</h3>
+          {approvedUsers.length > 0 ? (
+            <ul className="space-y-4">
+              {approvedUsers.map((user) => (
+                <li
+                  key={user.id}
+                  className={`flex justify-between items-center p-4 rounded-md font-medium shadow-md ${user.approved ? 'bg-green-400' : 'bg-red-400'
+                    }`}
+                >
+                  <div className='text-black'>
+                    <p><strong>Name:</strong> {user.name}</p>
+                    <p><strong>Class:</strong> {user.class}</p>
+                    <p><strong>Roll:</strong> {user.roll}</p>
+                    <p><strong>Mobile:</strong> {user.mobile}</p>
+                    <p><strong>Seat No:</strong>{user.seatNo}</p>
+                    <p><strong>Payment Mode:</strong> {user.paymentMode}</p>
+                    <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
+                  </div>
+                  {/*                                     <div className='flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0'>
                                         <a className="bg-blue-600 text-white px-4 py-1 rounded-md hover:bg-red-600 transition" href=''
                                         >
                                             Invite
@@ -279,33 +279,33 @@ const handlePerformerInputChange = (e) => {
                                             Delete
                                         </button>
                                     </div> */}
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p className='font-'>No users available.</p>
-                    )}
-                </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className='font-'>No users available.</p>
+          )}
+        </div>
 
-                {/* Display Pending Users */}
-                <div className="mb-10">
-                    <h3 className="text-2xl font-bold mb-4 text-black">Pending Users</h3>
-                    {pendingUsers.length > 0 ? (
-                        <ul className="space-y-4">
-                            {pendingUsers.map((user) => (
-                                <li key={user.id} className={`flex justify-between items-center p-4 rounded-md shadow-md font-medium ${user.approved ? 'bg-green-400' : 'bg-red-400'
-                                    }`}
-                                >
-                                    <div className='text-black'>
-                                        <p><strong>Name:</strong> {user.name}</p>
-                                        <p><strong>Class:</strong> {user.class}</p>
-                                        <p><strong>Roll:</strong> {user.roll}</p>
-                                        <p><strong>Mobile:</strong> {user.mobile}</p>
-                                        <p><strong>Seat No:</strong>{user.seatNo}</p>
-                                        <p><strong>Payment Mode:</strong> {user.paymentMode}</p>
-                                        <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
-                                    </div>
-{/*                                     <div className='flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0'>
+        {/* Display Pending Users */}
+        <div className="mb-10">
+          <h3 className="text-2xl font-bold mb-4 text-black">Pending Users</h3>
+          {pendingUsers.length > 0 ? (
+            <ul className="space-y-4">
+              {pendingUsers.map((user) => (
+                <li key={user.id} className={`flex justify-between items-center p-4 rounded-md shadow-md font-medium ${user.approved ? 'bg-green-400' : 'bg-red-400'
+                  }`}
+                >
+                  <div className='text-black'>
+                    <p><strong>Name:</strong> {user.name}</p>
+                    <p><strong>Class:</strong> {user.class}</p>
+                    <p><strong>Roll:</strong> {user.roll}</p>
+                    <p><strong>Mobile:</strong> {user.mobile}</p>
+                    <p><strong>Seat No:</strong>{user.seatNo}</p>
+                    <p><strong>Payment Mode:</strong> {user.paymentMode}</p>
+                    <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
+                  </div>
+                  {/*<div className='flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0'>
                                         <button
                                             onClick={() => handleDeleteUser(user.id)}
                                             className="bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 transition"
@@ -313,19 +313,41 @@ const handlePerformerInputChange = (e) => {
                                             Delete
                                         </button>
                                     </div> */}
-                                </li>
-                            ))}
-                        </ul>) : (
-                        <p className="text-black">No pending users.</p>
-                    )}
-                </div>
-            </div>
+                </li>
+              ))}
+            </ul>) : (
+            <p className="text-black">No pending users.</p>
+          )}
         </div>
-
-    
+      </div>
+      {/* Display Performers */}
+      <div>
+        <h3 className="text-2xl font-bold mb-4 text-blue-700">Selected Performers</h3>
+        {performers.length > 0 ? (
+          <ul className="space-y-4">
+            {performers.map((performer) => (
+              <li key={performer.id} className="flex justify-between items-center p-4 bg-cyan-600 rounded-md shadow-md">
+                <div className='text-black'>
+                  <p className='font-medium'>Name: {performer.name}</p>
+                  <img src={performer.imgUrl} alt={performer.name} className="w-20 h-20 object-cover mt-2 rounded-md" />
+                </div>
+                {/* <div>
+                    <button
+                      onClick={() => handleDeletePerformer(performer.id)}
+                      className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
+                    >
+                      Delete
+                    </button>
+                  </div> */}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className='font-bold text-orange-500'>No performers available.</p>
+        )}
       </div>
     </div>
-  );
+  )
 };
 
 export default AdminDashboard;
