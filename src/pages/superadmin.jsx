@@ -49,7 +49,9 @@ const SuperAdminDashboard = () => {
         password: '',
     });
 
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
+
     const [message, setMessage] = useState(''); // State to handle messages
     const [showMessage, setShowMessage] = useState(false); // State to control the visibility of the message
 
@@ -131,17 +133,21 @@ const SuperAdminDashboard = () => {
         showPopup(`User ${updatedUser.name} approved.`);
     };
 
+
     // Edit user
     const handleEditUser = (user) => {
         setEditingUser(user);
-        setUserForm(user);
+        setUserForm(user); // Set the form fields to the selected user's data
+        setEditModalOpen(true); // Open the modal
     };
+
 
     const handleSaveEditUser = () => {
         const userRef = ref(database, `users/${editingUser.id}`);
         set(userRef, { ...editingUser, ...userForm });
         showPopup(`User ${editingUser.name} updated successfully.`);
         setEditingUser(null);
+        setEditModalOpen(false); // Close the modal after saving
         setUserForm({ name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
     };
 
@@ -175,13 +181,13 @@ const SuperAdminDashboard = () => {
             setMessage('');
         }, 3000); // Show for 3 seconds
     };
-
     const handleLogout = () => {
         // Clear the currentAdmin from localStorage
         localStorage.removeItem('currentSuperAdmin');
         // Optionally, you can add additional logout logic here
         console.log('Logged out successfully');
-      };
+        navigate('/sadminlogin');
+    };
 
     // Render approved users and pending users
     const approvedUsers = users.filter((user) => user.approved);
@@ -196,13 +202,13 @@ const SuperAdminDashboard = () => {
                 <h2 className="text-xl font-semibold text-gray-600 mb-6">
                     Welcome {superadminName}
                 </h2>
-                <button 
-        onClick={handleLogout} 
-        className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
-      >
-        Logout
-      </button>
-    
+                <button
+                    onClick={handleLogout}
+                    className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
+                >
+                    Logout
+                </button>
+
                 <div className="flex justify-center mt-8">
                     <a
                         className="font-medium bg-green-800 border-2 border-red-600 rounded-md text-white py-2 px-4 hover:bg-green-700 transition-colors"
@@ -218,6 +224,89 @@ const SuperAdminDashboard = () => {
                         {message}
                     </div>
                 )}
+                {isEditModalOpen && (
+                    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+                        <div className="bg-white p-6 rounded-lg w-1/3 shadow-lg relative">
+                            <button
+                                className="absolute top-2 right-2 text-gray-700 hover:text-gray-900"
+                                onClick={() => setEditModalOpen(false)} // Close button
+                            >
+                                ✕
+                            </button>
+                            <h3 className="text-2xl font-bold mb-4 text-black">Edit Pending User</h3>
+                            <form onSubmit={(e) => { e.preventDefault(); handleSaveEditUser(); }}>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={userForm.name}
+                                    onChange={handleUserInputChange}
+                                    placeholder="Name"
+                                    className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                    required
+                                />
+                                <select
+                                    name="class"
+                                    value={userForm.class}
+                                    onChange={handleUserInputChange}
+                                    className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                    required
+                                >
+                                    <option value="">Select Class</option>
+                                    <option value="BCA1">BCA1</option>
+                                    <option value="BCA2">BCA2</option>
+                                    <option value="BCA3">BCA3</option>
+                                    <option value="MCA1">MCA1</option>
+                                    <option value="MCA3">MCA3</option>
+                                </select>
+                                <input
+                                    type="text"
+                                    name="roll"
+                                    value={userForm.roll}
+                                    onChange={handleUserInputChange}
+                                    placeholder="Roll"
+                                    className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="mobile"
+                                    value={userForm.mobile}
+                                    onChange={handleUserInputChange}
+                                    placeholder="Mobile"
+                                    className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="seatNo"
+                                    value={userForm.seatNo.toUpperCase()}
+                                    onChange={handleUserInputChange}
+                                    placeholder="Seat No"
+                                    className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                    required
+                                />
+                                <select
+                                    name="paymentMode"
+                                    value={userForm.paymentMode}
+                                    onChange={handleUserInputChange}
+                                    className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                                    required
+                                >
+                                    <option value="">Select Payment Mode</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="online">Online</option>
+                                </select>
+                                <button
+                                    type="submit"
+                                    className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition w-full"
+                                >
+                                    Save Changes
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                )}
+
 
                 {/* Add User Form */}
                 <div className="mb-10 ">
@@ -427,7 +516,7 @@ const SuperAdminDashboard = () => {
                                         >
                                             Invite
                                         </a>
-{/*                                         <button
+                                        {/*                                         <button
                                             onClick={() => handleDeleteUser(user.id)}
                                             className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
                                         >
@@ -466,6 +555,12 @@ const SuperAdminDashboard = () => {
                                             className="bg-green-500 text-white py-1 px-2 rounded-md hover:bg-green-600 transition"
                                         >
                                             Approve
+                                        </button>
+                                        <button
+                                            onClick={() => handleEditUser(user.id)}
+                                            className="bg-blue-500 text-white py-1 px-2 rounded-md hover:bg-green-600 transition"
+                                        >
+                                            Edit
                                         </button>
                                         <button
                                             onClick={() => handleDeleteUser(user.id)}

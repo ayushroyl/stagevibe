@@ -120,6 +120,7 @@ const AdminDashboard = () => {
     localStorage.removeItem('currentAdmin');
     // Optionally, you can add additional logout logic here
     console.log('Logged out successfully');
+    navigate('/adminlogin');
   };
   // Render approved users and pending users
   const approvedUsers = users.filter((user) => user.approved);
