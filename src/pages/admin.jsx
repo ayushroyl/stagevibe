@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ref, set, push, onValue, remove } from 'firebase/database';
-import database from '../firebase'; // Import Firebase instance
+import database from '../firebase';
+import { ref, onValue, set, remove, update } from 'firebase/database';
 
-const AdminDashboard = () => {
+const Admin = () => {
+
   const navigate = useNavigate();
   const currentAdmin = JSON.parse(localStorage.getItem('currentAdmin') || 'null');
   const [accessGranted, setAccessGranted] = useState(false);
@@ -24,9 +25,9 @@ const AdminDashboard = () => {
 
   const adminName = currentAdmin?.username || '';
   const [users, setUsers] = useState([]);
-  const [performers, setPerformers] = useState([]);
-
+  const [searchTerm, setSearchTerm] = useState('');
   const [userForm, setUserForm] = useState({
+    id: '',
     name: '',
     class: '',
     roll: '',
@@ -34,322 +35,316 @@ const AdminDashboard = () => {
     seatNo: '',
     paymentMode: '',
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState({ show: false, userId: null });
+  const [showFormModal, setShowFormModal] = useState(false);
+  const [filter, setFilter] = useState({ class: '', approvedStatus: 'all' });
+  const itemsPerPage = 10;
 
-  const [performerForm, setPerformerForm] = useState({
-    name: '',
-    imgUrl: '',
-  });
+  const usersRef = ref(database, 'users');
 
-  const [message, setMessage] = useState('');
-  const [showMessage, setShowMessage] = useState(false);
-
-  // Fetch data from Firebase on component mount
   useEffect(() => {
-    const usersRef = ref(database, 'users');
-    const performersRef = ref(database, 'performers');
-
     onValue(usersRef, (snapshot) => {
       const data = snapshot.val();
-      setUsers(data ? Object.values(data).reverse() : []);
-    });
-
-    onValue(performersRef, (snapshot) => {
-      const data = snapshot.val();
-      setPerformers(data ? Object.values(data).reverse() : []);
+      const userList = data ? Object.entries(data).map(([id, details]) => ({ id, ...details })) : [];
+      setUsers(userList);
     });
   }, []);
 
-  // Handler functions for form inputs
-  const handleUserInputChange = (e) => {
-    const { name, value } = e.target;
-    setUserForm({ ...userForm, [name]: value });
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
   };
 
-  const handlePerformerInputChange = (e) => {
-    const { name, value } = e.target;
-    setPerformerForm({ ...performerForm, [name]: value });
+  const handleFilterByClass = (e) => {
+    setFilter({ ...filter, class: e.target.value });
   };
 
-  // Function to add user
-  const handleAddUser = (e) => {
-    e.preventDefault();
-    const usersRef = ref(database, 'users');
-    const newUserRef = push(usersRef);
-    const newUser = { ...userForm, id: newUserRef.key, approved: false };
-    set(newUserRef, newUser);
-    showPopup(`User ${userForm.name} added successfully.`);
-    setUserForm({ name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: 'cash' });
+  const handleFilterByApproval = (status) => {
+    setFilter({ ...filter, approvedStatus: status });
   };
 
-  // Function to add performer
-  const handleAddPerformer = (e) => {
-    e.preventDefault();
-    const performersRef = ref(database, 'performers');
-    const newPerformerRef = push(performersRef);
-    set(newPerformerRef, { ...performerForm, id: newPerformerRef.key });
-    showPopup(`Performer ${performerForm.name} added successfully.`);
-    setPerformerForm({ name: '', imgUrl: '' });
+  const filteredUsers = users.filter((user) => {
+    const matchesClass = filter.class ? user.class === filter.class : true;
+    const matchesApproval =
+      filter.approvedStatus === 'all' ? true : filter.approvedStatus === 'approved' ? user.approved : !user.approved;
+    return matchesClass && matchesApproval && user.name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
+  const handleAddUser = () => {
+    if (userForm.id) {
+      update(ref(database, `users/${userForm.id}`), { ...userForm });
+    } else {
+      const userId = Date.now().toString();
+      set(ref(database, `users/${userId}`), { ...userForm, approved: false });
+    }
+    setUserForm({ id: '', name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
+    setShowFormModal(false);
   };
 
-  // Delete user
-  // const handleDeleteUser = (id) => {
-  //   const userRef = ref(database, `users/${id}`);
-  //   remove(userRef);
-  //   showPopup('User deleted successfully.');
-  // };
-
-  // Delete performer
-  // const handleDeletePerformer = (id) => {
-  //   const performerRef = ref(database, `performers/${id}`);
-  //   remove(performerRef);
-  //   showPopup('Performer deleted successfully.');
-  // };
-
-  // Function to show popup message
-  const showPopup = (msg) => {
-    setMessage(msg);
-    setShowMessage(true);
-    setTimeout(() => {
-      setShowMessage(false);
-      setMessage('');
-    }, 3000); // Show for 3 seconds
+  const handleDeleteUser = (userId) => {
+    remove(ref(database, `users/${userId}`));
+    setShowDeleteConfirm({ show: false, userId: null });
   };
-  // Function to logout admin and claer localstorage
-  const handleLogout = () => {
-    // Clear the currentAdmin from localStorage
-    localStorage.removeItem('currentAdmin');
-    // Optionally, you can add additional logout logic here
-    console.log('Logged out successfully');
-    navigate('/adminlogin');
+
+  const handleEditUser = (user) => {
+    setUserForm(user);
+    setShowFormModal(true);
   };
-  // Render approved users and pending users
-  const approvedUsers = users.filter((user) => user.approved);
-  const pendingUsers = users.filter((user) => !user.approved);
-  
+
+  const handleApproveUser = (userId) => {
+    update(ref(database, `users/${userId}`), { approved: true });
+  };
+
+
+    const handleLogout = () => {
+        // Clear the currentAdmin from localStorage
+        localStorage.removeItem('currentAdmin');
+        // Optionally, you can add additional logout logic here
+        console.log('Logged out successfully');
+        navigate('/adminlogin');
+      };
+
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Admin Dashboard</h1>
-        <h2 className="text-xl flex font-semibold text-gray-600 mb-6">Welcome {adminName}</h2>
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 flex text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <div className="mb-6">
+        <h1 className="text-3xl font-semibold text-blue-800">{adminName} Dashboard</h1>
+        <div className="mt-4 space-x-4">
+          <button
+            onClick={() => {
+              setUserForm({ id: '', name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
+              setShowFormModal(true);
+            }}
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          >
+            Add User
+          </button>
+          <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
+        </div>
+      </div>
+
+      <div className="flex mb-4">
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={searchTerm}
+          onChange={handleSearch}
+          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
+      {/* Filters */}
+      <div className="flex mb-4 space-x-2 flex-wrap">
+        <select
+          onChange={handleFilterByClass}
+          value={filter.class}
+          className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 w-full sm:w-auto"
         >
-          Logout
+          <option value="">Filter by Class</option>
+          <option value="BCA1">BCA1</option>
+          <option value="BCA2">BCA2</option>
+          <option value="BCA3">BCA3</option>
+          <option value="MCA1">MCA1</option>
+          <option value="MCA3">MCA3</option>
+        </select>
+
+        <button
+          onClick={() => handleFilterByApproval('all')}
+          className={`px-3 py-2 rounded ${filter.approvedStatus === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}
+        >
+          All Users
         </button>
 
-        {/* Display the message */}
-        {showMessage && (
-          <div className="bg-green-500 text-white p-4 rounded-md mb-4">
-            {message}
-          </div>
-        )}
+        <button
+          onClick={() => handleFilterByApproval('approved')}
+          className={`px-3 py-2 rounded ${filter.approvedStatus === 'approved' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}
+        >
+          Approved Users
+        </button>
 
-        {/* Add User Form */}
-        <div className="mb-10 ">
-          <h3 className="text-2xl font-bold mb-4 text-blue-700">Add User</h3>
-          <form onSubmit={handleAddUser} className="grid grid-cols-2 gap-4">
-            <input
-              type="text"
-              name="name"
-              value={userForm.name}
-              onChange={handleUserInputChange}
-              placeholder="Name"
-              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              required
-            />
-            <select
-              name="class"
-              value={userForm.class}
-              onChange={handleUserInputChange}
-              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              required
-            >
-              <option value="">Select Class</option>
-              <option value="BCA1">BCA1</option>
-              <option value="BCA2">BCA2</option>
-              <option value="BCA3">BCA3</option>
-              <option value="MCA1">MCA1</option>
-              <option value="MCA3">MCA3</option>
-            </select>
-            <input
-              type="text"
-              name="roll"
-              value={userForm.roll}
-              onChange={handleUserInputChange}
-              placeholder="Roll"
-              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              required
-            />
-            <input
-              type="number"
-              name="mobile"
-              value={userForm.mobile}
-              onChange={handleUserInputChange}
-              placeholder="Mobile"
-              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              required
-            />
-            <input
-              type="text"
-              name="seatNo"
-              value={userForm.seatNo.toUpperCase()}
-              onChange={handleUserInputChange}
-              placeholder="Seat No"
-              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              required
-            />
-            <select
-              name="paymentMode"
-              value={userForm.paymentMode}
-              onChange={handleUserInputChange}
-              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              required
-            >
-              <option value="">Select Mode</option>
-              <option value="cash">Cash</option>
-              <option value="online">Online</option>
-            </select>
-            <button
-              type="submit"
-              className="col-span-2 py-2 px-4 bg-yellow-500 text-black font-semibold rounded-full hover:bg-yellow-600 transition duration-300"
-            >
-              Add User
-            </button>
-          </form>
-        </div>
-
-        {/* Add Performer Form */}
-        <div className="mb-10">
-          <h3 className="text-2xl font-bold mb-4 text-blue-700">Add Performer</h3>
-          <form onSubmit={handleAddPerformer} className="grid grid-cols-2 gap-4">
-            <input
-              type="text"
-              name="name"
-              value={performerForm.name}
-              onChange={handlePerformerInputChange}
-              placeholder="Performer Name"
-              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              required
-            />
-            <input
-              type="text"
-              name="imgUrl"
-              value={performerForm.imgUrl}
-              onChange={handlePerformerInputChange}
-              placeholder="Image URL"
-              className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
-              required
-            />
-            <button
-              type="submit"
-              className="col-span-2 py-2 px-4 bg-yellow-500 text-black font-semibold rounded-full hover:bg-yellow-600 transition duration-300"
-            >
-              Add Selected Performer
-            </button>
-          </form>
-        </div>
-                {/* Display Pending Users */}
-                <div className="mb-10">
-          <h3 className="text-2xl font-bold mb-4 text-black">Pending Users</h3>
-          {pendingUsers.length > 0 ? (
-            <ul className="space-y-4">
-              {pendingUsers.map((user) => (
-                <li key={user.id} className={`flex justify-between items-center p-4 rounded-md shadow-md font-medium ${user.approved ? 'bg-green-400' : 'bg-red-400'
-                  }`}
-                >
-                  <div className='text-black'>
-                    <p><strong>Name:</strong> {user.name}</p>
-                    <p><strong>Class:</strong> {user.class}</p>
-                    <p><strong>Roll:</strong> {user.roll}</p>
-                    <p><strong>Mobile:</strong> {user.mobile}</p>
-                    <p><strong>Seat No:</strong>{user.seatNo}</p>
-                    <p><strong>Payment Mode:</strong> {user.paymentMode}</p>
-                    <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
+        <button
+          onClick={() => handleFilterByApproval('notApproved')}
+          className={`px-3 py-2 rounded ${filter.approvedStatus === 'notApproved' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}
+        >
+          Not Approved Users
+        </button>
+      </div>
+      {/* User Table */}
+      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table className="min-w-full border bg-white rounded-lg table-fixed">
+          <thead>
+            <tr className="bg-blue-500 text-white">
+              <th className="w-1/12 p-3 text-left text-sm">SR No.</th>
+              <th className="w-3/12 p-3 text-left text-sm">Name</th>
+              <th className="w-2/12 p-3 text-left text-sm">Class</th>
+              <th className="w-1/12 p-3 text-left text-sm">Roll</th>
+              <th className="w-3/12 p-3 text-left text-sm">Mobile</th>
+              <th className="w-2/12 p-3 text-left text-sm">Seat No.</th>
+              <th className="w-2/12 p-3 text-left text-sm">Payment Mode</th>
+              <th className="w-2/12 p-3 text-left text-sm">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {paginatedUsers.map((user, index) => (
+              <tr key={user.id} className="border-b hover:bg-gray-100 text-black">
+                <td className="p-3 text-sm">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                <td className="p-3 text-sm overflow-hidden whitespace-nowrap text-ellipsis">{user.name}</td>
+                <td className="p-3 text-sm overflow-hidden whitespace-nowrap text-ellipsis">{user.class}</td>
+                <td className="p-3 text-sm overflow-hidden whitespace-nowrap text-ellipsis">{user.roll}</td>
+                <td className="p-3 text-sm overflow-hidden whitespace-nowrap text-ellipsis">{user.mobile}</td>
+                <td className="p-3 text-sm overflow-hidden whitespace-nowrap text-ellipsis">{user.seatNo}</td>
+                <td className="p-3 text-sm overflow-hidden whitespace-nowrap text-ellipsis">{user.paymentMode}</td>
+                <td className="p-3 text-sm">
+                  <div className="flex justify-center space-x-2">
+                    {user.approved ? (
+"Done"
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => handleEditUser(user)}
+                          className="px-1 text-blue-500"
+                          title="Edit"
+                        >
+                          <span className="material-icons">edit</span> {/* Pencil icon for Edit */}
+                        </button>
+                        <button
+                          onClick={() => setShowDeleteConfirm({ show: true, userId: user.id })}
+                          className="px-1 text-red-500"
+                          title="Delete"
+                        >
+                          <span className="material-icons">delete</span> {/* Trash icon for Delete */}
+                        </button>
+                        <button
+                          onClick={() => handleApproveUser(user.id)}
+                          className="px-1 text-yellow-500"
+                          title="Approve"
+                        >
+                          <span className="material-icons">check_circle</span> {/* Check icon for Approve */}
+                        </button>
+                      </>
+                    )}
                   </div>
-                  {/*<div className='flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0'>
-                                        <button
-                                            onClick={() => handleDeleteUser(user.id)}
-                                            className="bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 transition"
-                                        >
-                                            Delete
-                                        </button>
-                                    </div> */}
-                </li>
-              ))}
-            </ul>) : (
-            <p className="text-black">No pending users.</p>
-          )}
-        </div>
-
-        {/* Display Approved Users */}
-        <div className="mb-10">
-          <h3 className="text-2xl font-bold mb-4 text-black">Approved Users</h3>
-          {approvedUsers.length > 0 ? (
-            <ul className="space-y-4">
-              {approvedUsers.map((user) => (
-                <li
-                  key={user.id}
-                  className={`flex justify-between items-center p-4 rounded-md font-medium shadow-md ${user.approved ? 'bg-green-400' : 'bg-red-400'
-                    }`}
-                >
-                  <div className='text-black'>
-                    <p><strong>Name:</strong> {user.name}</p>
-                    <p><strong>Class:</strong> {user.class}</p>
-                    <p><strong>Roll:</strong> {user.roll}</p>
-                    <p><strong>Mobile:</strong> {user.mobile}</p>
-                    <p><strong>Seat No:</strong>{user.seatNo}</p>
-                    <p><strong>Payment Mode:</strong> {user.paymentMode}</p>
-                    <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
-                  </div>
-                  {/*                                     <div className='flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0'>
-                                        <a className="bg-blue-600 text-white px-4 py-1 rounded-md hover:bg-red-600 transition" href=''
-                                        >
-                                            Invite
-                                        </a>
-                                           <button
-                                            onClick={() => handleDeleteUser(user.id)}
-                                            className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
-                                        >
-                                            Delete
-                                        </button>
-                                    </div> */}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className='font-'>No users available.</p>
-          )}
-        </div>
-              {/* Display Performers */}
-      <div>
-        <h3 className="text-2xl font-bold mb-4 text-blue-700">Selected Performers</h3>
-        {performers.length > 0 ? (
-          <ul className="space-y-4">
-            {performers.map((performer) => (
-              <li key={performer.id} className="flex justify-between items-center p-4 bg-cyan-600 rounded-md shadow-md">
-                <div className='text-black'>
-                  <p className='font-medium'>Name: {performer.name}</p>
-                  <img src={performer.imgUrl} alt={performer.name} className="w-20 h-20 object-cover mt-2 rounded-md" />
-                </div>
-                {/* <div>
-                    <button
-                      onClick={() => handleDeletePerformer(performer.id)}
-                      className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
-                    >
-                      Delete
-                    </button>
-                  </div> */}
-              </li>
+                </td>
+              </tr>
             ))}
-          </ul>
-        ) : (
-          <p className='font-bold text-orange-500'>No performers available.</p>
-        )}
+          </tbody>
+        </table>
       </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-4">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentPage(index + 1)}
+            className={`mx-1 px-4 py-2 rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}
+          >
+            {index + 1}
+          </button>
+        ))}
       </div>
+
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm.show && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-5 rounded-lg w-11/12 md:w-1/3">
+            <h2 className="text-lg font-bold">Confirm Delete</h2>
+            <p>Are you sure you want to delete this user?</p>
+            <div className="mt-4 flex justify-end space-x-2">
+              <button onClick={() => setShowDeleteConfirm({ show: false, userId: null })} className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Cancel</button>
+              <button onClick={() => handleDeleteUser(showDeleteConfirm.userId)} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* User Form Modal */}
+      {showFormModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-5 rounded-lg w-11/12 md:w-3/4 lg:w-1/2">
+            <h2 className="text-lg font-bold">{userForm.id ? 'Edit User' : 'Add User'}</h2>
+            <form onSubmit={(e) => { e.preventDefault(); handleAddUser(); }}>
+              <input
+                type="text"
+                placeholder="Name"
+                value={userForm.name}
+                onChange={(e) => setUserForm({ ...userForm, name: e.target.value })}
+                className="w-full p-2 border border-gray-300 rounded mb-4"
+                required
+              />
+              <select
+                value={userForm.class}
+                onChange={(e) => setUserForm({ ...userForm, class: e.target.value })}
+                className="w-full p-2 border border-gray-300 rounded mb-4"
+                required
+              >
+                <option value="">Select Class</option>
+                <option value="BCA1">BCA1</option>
+                <option value="BCA2">BCA2</option>
+                <option value="BCA3">BCA3</option>
+                <option value="MCA1">MCA1</option>
+                <option value="MCA3">MCA3</option>
+              </select>
+              <input
+                type="text"
+                placeholder="Roll"
+                value={userForm.roll}
+                onChange={(e) => setUserForm({ ...userForm, roll: e.target.value })}
+                className="w-full p-2 border border-gray-300 rounded mb-4"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Mobile"
+                value={userForm.mobile}
+                onChange={(e) => setUserForm({ ...userForm, mobile: e.target.value })}
+                className="w-full p-2 border border-gray-300 rounded mb-4"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Seat No."
+                value={userForm.seatNo}
+                onChange={(e) => setUserForm({ ...userForm, seatNo: e.target.value })}
+                className="w-full p-2 border border-gray-300 rounded mb-4"
+                required
+              />
+              <select
+                value={userForm.paymentMode}
+                onChange={(e) => setUserForm({ ...userForm, paymentMode: e.target.value })}
+                className="w-full p-2 border border-gray-300 rounded mb-4"
+                required
+              >
+                <option value="">Select Payment Mode</option>
+                <option value="Cash">Cash</option>
+                <option value="Online">Online</option>
+              </select>
+              <div className="flex justify-between mt-4">
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                  {userForm.id ? 'Update User' : 'Add User'}
+                </button>
+                <button
+                  onClick={() => setShowFormModal(false)}
+                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 };
 
-export default AdminDashboard;
+export default Admin;
