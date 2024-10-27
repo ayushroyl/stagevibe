@@ -4,7 +4,6 @@ import database from '../firebase';
 import { ref, onValue, set, remove, update } from 'firebase/database';
 
 const Admin = () => {
-
   const navigate = useNavigate();
   const currentAdmin = JSON.parse(localStorage.getItem('currentAdmin') || 'null');
   const [accessGranted, setAccessGranted] = useState(false);
