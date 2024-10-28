@@ -82,7 +82,7 @@ const Admin = () => {
 
   const handleDeleteUser = (userId) => {
     remove(ref(database, `users/${userId}`));
-    setShowDeleteConfirm({ show: false});
+    setShowDeleteConfirm({ show: false, userId: null});
   };
 
   const handleEditUser = (user) => {

@@ -94,13 +94,10 @@ const SuperAdminDashboard = () => {
     // Function to add user
     const handleAddUser = (e) => {
         e.preventDefault();
-        const usersRef = ref(database, 'users');
-        const newUserRef = push(usersRef);
-        const newUser = { ...userForm, id: newUserRef.key, approved: false };
-        set(newUserRef, newUser);
-        setUsers((prevUsers) => [newUser, ...prevUsers]);
+        const userId = Date.now().toString();
+        set(ref(database, `users/${userId}`), { ...userForm, approved: false, id: userId, added_by: 'superadmin' });
         showPopup(`User ${userForm.name} added successfully.`);
-        setUserForm({ name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: 'cash' });
+        setUserForm({ name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
     };
 
     // Function to add performer
@@ -182,7 +179,7 @@ const SuperAdminDashboard = () => {
         // Optionally, you can add additional logout logic here
         console.log('Logged out successfully');
         navigate('/sadminlogin');
-      };
+    };
 
     // Render approved users and pending users
     const approvedUsers = users.filter((user) => user.approved);
@@ -197,13 +194,13 @@ const SuperAdminDashboard = () => {
                 <h2 className="text-xl font-semibold text-gray-600 mb-6">
                     Welcome {superadminName}
                 </h2>
-                <button 
-        onClick={handleLogout} 
-        className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
-      >
-        Logout
-      </button>
-    
+                <button
+                    onClick={handleLogout}
+                    className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
+                >
+                    Logout
+                </button>
+
                 <div className="flex justify-center mt-8">
                     <a
                         className="font-medium bg-green-800 border-2 border-red-600 rounded-md text-white py-2 px-4 hover:bg-green-700 transition-colors"
@@ -421,14 +418,18 @@ const SuperAdminDashboard = () => {
                                         <p><strong>Mobile:</strong> {user.mobile}</p>
                                         <p><strong>Seat No:</strong>{user.seatNo}</p>
                                         <p><strong>Payment Mode:</strong> {user.paymentMode}</p>
-                                        <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
+                                        <p><strong>Added by:</strong> {user.added_by}</p>
                                     </div>
                                     <div className='flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0'>
-                                        <a className="bg-blue-600 text-white px-4 py-1 rounded-md hover:bg-red-600 transition" href=''
+                                        <a
+                                            className="bg-blue-600 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
+                                            href={`https://wa.me/+91${user.mobile}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
                                         >
                                             Invite
                                         </a>
-{/*                                         <button
+                                        {/*                                         <button
                                             onClick={() => handleDeleteUser(user.id)}
                                             className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
                                         >
@@ -468,8 +469,8 @@ const SuperAdminDashboard = () => {
                                         >
                                             Approve
                                         </button>
-                                        <button 
-                                            onClick={() => handleEditUser(user)} 
+                                        <button
+                                            onClick={() => handleEditUser(user)}
                                             className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600 transition"
                                         >
                                             Edit
