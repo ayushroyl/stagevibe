@@ -59,7 +59,7 @@ const Home = () => {
 
           {/* Description */}
           <p className="text-base sm:text-lg lg:text-xl text-indigo-100 max-w-2xl mx-auto leading-relaxed">
-            Join us for an unforgettable night at the{' '}
+            Join us for an unforgettable day at the{' '}
             <span className="text-yellow-300 font-semibold">
               College Auditorium
             </span>{' '}

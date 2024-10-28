@@ -156,6 +156,7 @@ const addSeatToBooking = () => {
         ...userDetails[seat],
         id: newUserRef.key,
         approved: false,
+        added_by: 'self',
         seatNo: seat,
         paymentMode: 'online',
       };

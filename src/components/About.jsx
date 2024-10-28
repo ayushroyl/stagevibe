@@ -90,7 +90,7 @@ const About = () => {
             transition={{ duration: 0.8, delay: 0.7 }}
           >
             <p className="text-2xl md:text-3xl font-bold text-center bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300 bg-clip-text text-transparent">
-              🎉 A Night to Remember at the College Auditorium
+              🎉 A Day to Remember at the College Auditorium
             </p>
             
             <div className="space-y-4 md:space-y-6 bg-black/30 rounded-xl p-6 backdrop-blur-sm border border-pink-500/10">

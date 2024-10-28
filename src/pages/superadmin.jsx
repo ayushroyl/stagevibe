@@ -460,7 +460,7 @@ const SuperAdminDashboard = () => {
                                         <p><strong>Mobile:</strong> {user.mobile}</p>
                                         <p><strong>Seat No:</strong>{user.seatNo}</p>
                                         <p><strong>Payment Mode:</strong> {user.paymentMode}</p>
-                                        <p><strong>Approved:</strong> {user.approved ? 'Yes' : 'No'}</p>
+                                        <p><strong>Added by:</strong> {user.added_by}</p>
                                     </div>
                                     <div className='flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0'>
                                         <button
