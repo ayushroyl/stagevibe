@@ -49,9 +49,9 @@ const Booking = () => {
       snapshot.forEach((childSnapshot) => {
         const seatData = childSnapshot.val();
         if (seatData.approved) {
-          booked.push(seatData.seatNo);
+          booked.push(seatData.seatNo.toUpperCase());
         } else {
-          pending.push(seatData.seatNo);
+          pending.push(seatData.seatNo.toUpperCase());
         }
       });
       setBookedSeats(booked);
