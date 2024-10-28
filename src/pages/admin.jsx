@@ -14,7 +14,7 @@ const Admin = () => {
       navigate('/adminlogin');
     } else if (!accessGranted) {
       const userInput = prompt("Please enter access code:");
-      if (userInput === '1256') {
+      if (userInput === '1295') {
         setAccessGranted(true);
       } else {
         navigate('/adminlogin');
