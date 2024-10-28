@@ -66,7 +66,7 @@ const Admin = () => {
     const matchesClass = filter.class ? user.class === filter.class : true;
     const matchesApproval =
       filter.approvedStatus === 'all' ? true : filter.approvedStatus === 'approved' ? user.approved : !user.approved;
-    return matchesClass && matchesApproval && user.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesClass && matchesApproval && user.name?.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   const handleAddUser = () => {
