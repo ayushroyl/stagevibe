@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import database from '../firebase';
 import { ref, onValue, set, remove, update } from 'firebase/database';
@@ -7,20 +7,21 @@ const Admin = () => {
   const navigate = useNavigate();
   const currentAdmin = JSON.parse(localStorage.getItem('currentAdmin') || 'null');
   const [accessGranted, setAccessGranted] = useState(false);
+  const accessCodeChecked = useRef(false); // To prevent multiple prompts
 
   useEffect(() => {
     if (!currentAdmin) {
       navigate('/adminlogin');
-    } else if (!accessGranted) {
+    } else if (!accessCodeChecked.current) {
       const userInput = prompt("Please enter access code:");
       if (userInput === '1256') {
         setAccessGranted(true);
+        accessCodeChecked.current = true;
       } else {
         navigate('/adminlogin');
       }
     }
-  }, [currentAdmin, accessGranted, navigate]);
-
+  }, [currentAdmin, navigate]);
 
   const adminName = currentAdmin?.username || '';
   const [users, setUsers] = useState([]);
@@ -43,11 +44,13 @@ const Admin = () => {
   const usersRef = ref(database, 'users');
 
   useEffect(() => {
-    onValue(usersRef, (snapshot) => {
+    const unsubscribe = onValue(usersRef, (snapshot) => {
       const data = snapshot.val();
       const userList = data ? Object.entries(data).map(([id, details]) => ({ id, ...details })) : [];
       setUsers(userList);
     });
+
+    return () => unsubscribe();
   }, []);
 
   const handleSearch = (e) => {
@@ -94,14 +97,11 @@ const Admin = () => {
     update(ref(database, `users/${userId}`), { approved: true });
   };
 
-
-    const handleLogout = () => {
-        // Clear the currentAdmin from localStorage
-        localStorage.removeItem('currentAdmin');
-        // Optionally, you can add additional logout logic here
-        console.log('Logged out successfully');
-        navigate('/adminlogin');
-      };
+  const handleLogout = () => {
+    localStorage.removeItem('currentAdmin');
+    console.log('Logged out successfully');
+    navigate('/adminlogin');
+  };
 
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const paginatedUsers = filteredUsers.slice(
@@ -137,7 +137,6 @@ const Admin = () => {
         />
       </div>
 
-      {/* Filters */}
       <div className="flex mb-4 space-x-2 flex-wrap">
         <select
           onChange={handleFilterByClass}
@@ -173,7 +172,7 @@ const Admin = () => {
           Not Approved Users
         </button>
       </div>
-      {/* User Table */}
+
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
         <table className="min-w-full border bg-white rounded-lg table-fixed">
           <thead>
@@ -201,7 +200,7 @@ const Admin = () => {
                 <td className="p-3 text-sm">
                   <div className="flex justify-center space-x-2">
                     {user.approved ? (
-"Done"
+                      <span className="px-2 py-1 bg-green-500 text-white rounded">Approved</span>
                     ) : (
                       <>
                         <button
@@ -209,21 +208,21 @@ const Admin = () => {
                           className="px-1 text-blue-500"
                           title="Edit"
                         >
-                          <span className="material-icons">edit</span> {/* Pencil icon for Edit */}
+                          <span className="material-icons">edit</span>
                         </button>
                         <button
                           onClick={() => setShowDeleteConfirm({ show: true, userId: user.id })}
                           className="px-1 text-red-500"
                           title="Delete"
                         >
-                          <span className="material-icons">delete</span> {/* Trash icon for Delete */}
+                          <span className="material-icons">delete</span>
                         </button>
                         <button
                           onClick={() => handleApproveUser(user.id)}
                           className="px-1 text-yellow-500"
                           title="Approve"
                         >
-                          <span className="material-icons">check_circle</span> {/* Check icon for Approve */}
+                          <span className="material-icons">check_circle</span>
                         </button>
                       </>
                     )}
@@ -237,27 +236,30 @@ const Admin = () => {
 
       {/* Pagination */}
       <div className="flex justify-center mt-4">
-        {Array.from({ length: totalPages }, (_, index) => (
+        {[...Array(totalPages)].map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentPage(index + 1)}
-            className={`mx-1 px-4 py-2 rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}
+            className={`mx-1 px-3 py-1 rounded ${index + 1 === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}
           >
             {index + 1}
           </button>
         ))}
       </div>
 
-
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm.show && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-5 rounded-lg w-11/12 md:w-1/3">
-            <h2 className="text-lg font-bold">Confirm Delete</h2>
+          <div className="bg-white p-5 rounded-lg shadow-lg w-11/12 md:w-1/3">
+            <h2 className="text-lg font-bold mb-4">Confirm Deletion</h2>
             <p>Are you sure you want to delete this user?</p>
-            <div className="mt-4 flex justify-end space-x-2">
-              <button onClick={() => setShowDeleteConfirm({ show: false, userId: null })} className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Cancel</button>
-              <button onClick={() => handleDeleteUser(showDeleteConfirm.userId)} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+            <div className="flex justify-end mt-4 space-x-2">
+              <button onClick={() => handleDeleteUser(showDeleteConfirm.userId)} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                Delete
+              </button>
+              <button onClick={() => setShowDeleteConfirm({ show: false, userId: null })} className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
+                Cancel
+              </button>
             </div>
           </div>
         </div>
@@ -265,37 +267,38 @@ const Admin = () => {
 
       {/* User Form Modal */}
       {showFormModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div
+          role="dialog"
+          aria-labelledby="userFormLabel"
+          aria-describedby="userFormDesc"
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+        >
           <div className="bg-white p-5 rounded-lg w-11/12 md:w-3/4 lg:w-1/2">
-            <h2 className="text-lg font-bold">{userForm.id ? 'Edit User' : 'Add User'}</h2>
-            <form onSubmit={(e) => { e.preventDefault(); handleAddUser(); }}>
+            <h2 id="userFormLabel" className="text-lg font-bold">{userForm.id ? 'Edit User' : 'Add User'}</h2>
+            <p id="userFormDesc">Fill in user details and save changes.</p>
+            <form onSubmit={(e) => e.preventDefault()}>
               <input
                 type="text"
                 placeholder="Name"
                 value={userForm.name}
                 onChange={(e) => setUserForm({ ...userForm, name: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded mb-4"
+                className="w-full p-2 mt-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                 required
               />
-              <select
+              <input
+                type="text"
+                placeholder="Class"
                 value={userForm.class}
                 onChange={(e) => setUserForm({ ...userForm, class: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded mb-4"
+                className="w-full p-2 mt-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                 required
-              >
-                <option value="">Select Class</option>
-                <option value="BCA1">BCA1</option>
-                <option value="BCA2">BCA2</option>
-                <option value="BCA3">BCA3</option>
-                <option value="MCA1">MCA1</option>
-                <option value="MCA3">MCA3</option>
-              </select>
+              />
               <input
                 type="text"
                 placeholder="Roll"
                 value={userForm.roll}
                 onChange={(e) => setUserForm({ ...userForm, roll: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded mb-4"
+                className="w-full p-2 mt-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                 required
               />
               <input
@@ -303,7 +306,7 @@ const Admin = () => {
                 placeholder="Mobile"
                 value={userForm.mobile}
                 onChange={(e) => setUserForm({ ...userForm, mobile: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded mb-4"
+                className="w-full p-2 mt-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                 required
               />
               <input
@@ -311,29 +314,25 @@ const Admin = () => {
                 placeholder="Seat No."
                 value={userForm.seatNo}
                 onChange={(e) => setUserForm({ ...userForm, seatNo: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded mb-4"
-                required
+                className="w-full p-2 mt-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
-              <select
+              <input
+                type="text"
+                placeholder="Payment Mode"
                 value={userForm.paymentMode}
                 onChange={(e) => setUserForm({ ...userForm, paymentMode: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded mb-4"
-                required
-              >
-                <option value="">Select Payment Mode</option>
-                <option value="Cash">Cash</option>
-                <option value="Online">Online</option>
-              </select>
-              <div className="flex justify-between mt-4">
+                className="w-full p-2 mt-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+              <div className="flex justify-end mt-4 space-x-2">
                 <button
-                  type="submit"
+                  onClick={handleAddUser}
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                 >
-                  {userForm.id ? 'Update User' : 'Add User'}
+                  Save
                 </button>
                 <button
                   onClick={() => setShowFormModal(false)}
-                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                  className="bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400"
                 >
                   Cancel
                 </button>
