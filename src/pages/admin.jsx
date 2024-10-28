@@ -4,6 +4,7 @@ import database from '../firebase';
 import { ref, onValue, set, remove, update } from 'firebase/database';
 
 const Admin = () => {
+
   const navigate = useNavigate();
   const currentAdmin = JSON.parse(localStorage.getItem('currentAdmin') || 'null');
   const [accessGranted, setAccessGranted] = useState(false);
@@ -26,7 +27,6 @@ const Admin = () => {
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [userForm, setUserForm] = useState({
-    id: '',
     name: '',
     class: '',
     roll: '',
@@ -66,7 +66,7 @@ const Admin = () => {
     const matchesClass = filter.class ? user.class === filter.class : true;
     const matchesApproval =
       filter.approvedStatus === 'all' ? true : filter.approvedStatus === 'approved' ? user.approved : !user.approved;
-    return matchesClass && matchesApproval && user.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesClass && matchesApproval && user.name?.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   const handleAddUser = () => {
@@ -74,15 +74,15 @@ const Admin = () => {
       update(ref(database, `users/${userForm.id}`), { ...userForm });
     } else {
       const userId = Date.now().toString();
-      set(ref(database, `users/${userId}`), { ...userForm, approved: false });
+      set(ref(database, `users/${userId}`), { ...userForm, approved: false, id: userId, added_by: adminName });
     }
-    setUserForm({ id: '', name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
+    setUserForm({name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
     setShowFormModal(false);
   };
 
   const handleDeleteUser = (userId) => {
     remove(ref(database, `users/${userId}`));
-    setShowDeleteConfirm({ show: false, userId: null });
+    setShowDeleteConfirm({ show: false});
   };
 
   const handleEditUser = (user) => {
@@ -116,7 +116,7 @@ const Admin = () => {
         <div className="mt-4 space-x-4">
           <button
             onClick={() => {
-              setUserForm({ id: '', name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
+              setUserForm({name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
               setShowFormModal(true);
             }}
             className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
@@ -253,7 +253,7 @@ const Admin = () => {
       {showDeleteConfirm.show && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-5 rounded-lg w-11/12 md:w-1/3">
-            <h2 className="text-lg font-bold">Confirm Delete</h2>
+            <h2 className="text-lg font-bold text-black">Confirm Delete</h2>
             <p>Are you sure you want to delete this user?</p>
             <div className="mt-4 flex justify-end space-x-2">
               <button onClick={() => setShowDeleteConfirm({ show: false, userId: null })} className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Cancel</button>
