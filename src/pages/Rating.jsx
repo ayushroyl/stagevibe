@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Img from '../assets/image.png';
 
 const Rating = ({ performers = [], loggedIn }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -91,7 +92,10 @@ const Rating = ({ performers = [], loggedIn }) => {
               </div>
             ))
           ) : (
-            <p className="text-white text-center">No performers available.</p>
+            <div className='mb-44'>
+            <img src="https://devfest.gdgpatna.com/assets/planning-KNpvy04k.gif" alt="comming soon" />
+            <h2 className='text-3xl font-bold content-center text-green-900 text-secondary mt-4 mb-[-5%]'>Comming Soon</h2>
+            </div>
           )}
         </div>
 
