@@ -76,13 +76,13 @@ const Admin = () => {
       const userId = Date.now().toString();
       set(ref(database, `users/${userId}`), { ...userForm, approved: false, id: userId, added_by: adminName });
     }
-    setUserForm({name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
+    setUserForm({ name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
     setShowFormModal(false);
   };
 
   const handleDeleteUser = (userId) => {
     remove(ref(database, `users/${userId}`));
-    setShowDeleteConfirm({ show: false, userId: null});
+    setShowDeleteConfirm({ show: false, userId: null });
   };
 
   const handleEditUser = (user) => {
@@ -95,13 +95,13 @@ const Admin = () => {
   };
 
 
-    const handleLogout = () => {
-        // Clear the currentAdmin from localStorage
-        localStorage.removeItem('currentAdmin');
-        // Optionally, you can add additional logout logic here
-        console.log('Logged out successfully');
-        navigate('/adminlogin');
-      };
+  const handleLogout = () => {
+    // Clear the currentAdmin from localStorage
+    localStorage.removeItem('currentAdmin');
+    // Optionally, you can add additional logout logic here
+    console.log('Logged out successfully');
+    navigate('/adminlogin');
+  };
 
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const paginatedUsers = filteredUsers.slice(
@@ -116,7 +116,7 @@ const Admin = () => {
         <div className="mt-4 space-x-4">
           <button
             onClick={() => {
-              setUserForm({name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
+              setUserForm({ name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
               setShowFormModal(true);
             }}
             className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 dark:hover:bg-green-700"
@@ -201,7 +201,7 @@ const Admin = () => {
                 <td className="p-3 text-sm">
                   <div className="flex justify-center space-x-2">
                     {user.approved ? (
-"Done"
+                      "Done"
                     ) : (
                       <>
                         <button
@@ -252,7 +252,7 @@ const Admin = () => {
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm.show && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white dark:bg-gray-800 p-5 rounded-lg w-11/12 md:w-1/3">
+          <div className="bg-gradient-to-b from-gray-800 to-gray-900 p-6 rounded-2xl text-white shadow-lg w-auto max-w-md relative">
             <h2 className="text-lg font-bold text-black dark:text-white">Confirm Delete</h2>
             <p>Are you sure you want to delete this user?</p>
             <div className="mt-4 flex justify-end space-x-2">
@@ -265,22 +265,22 @@ const Admin = () => {
 
       {/* User Form Modal */}
       {showFormModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white dark:bg-gray-800 p-5 rounded-lg w-11/12 md:w-3/4 lg:w-1/2">
-            <h2 className="text-lg font-bold dark:text-white">{userForm.id ? 'Edit User' : 'Add User'}</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-gradient-to-b font-medium from-gray-800 to-gray-900 p-6 rounded-2xl text-white shadow-lg w-auto max-w-md relative">
+            <h2 className="text-lg font-bold text-white">{userForm.id ? 'Edit User' : 'Add User'}</h2>
             <form onSubmit={(e) => { e.preventDefault(); handleAddUser(); }}>
               <input
                 type="text"
                 placeholder="Name"
                 value={userForm.name}
                 onChange={(e) => setUserForm({ ...userForm, name: e.target.value })}
-                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-700"
+                className="w-full p-2 mb-4 border border-gray-500 rounded-lg bg-gray-700 text-white"
                 required
               />
               <select
                 value={userForm.class}
                 onChange={(e) => setUserForm({ ...userForm, class: e.target.value })}
-                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-700"
+                className="w-full p-2 mb-4 border border-gray-500 rounded-lg bg-gray-700 text-white"
                 required
               >
                 <option value="">Select Class</option>
@@ -295,7 +295,7 @@ const Admin = () => {
                 placeholder="Roll"
                 value={userForm.roll}
                 onChange={(e) => setUserForm({ ...userForm, roll: e.target.value })}
-                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-700"
+                className="w-full p-2 mb-4 border border-gray-500 rounded-lg bg-gray-700 text-white"
                 required
               />
               <input
@@ -303,7 +303,7 @@ const Admin = () => {
                 placeholder="Mobile"
                 value={userForm.mobile}
                 onChange={(e) => setUserForm({ ...userForm, mobile: e.target.value })}
-                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-700"
+                className="w-full p-2 mb-4 border border-gray-500 rounded-lg bg-gray-700 text-white"
                 required
               />
               <input
@@ -311,13 +311,13 @@ const Admin = () => {
                 placeholder="Seat No."
                 value={userForm.seatNo}
                 onChange={(e) => setUserForm({ ...userForm, seatNo: e.target.value })}
-                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-700"
+                className="w-full p-2 mb-4 border border-gray-500 rounded-lg bg-gray-700 text-white"
                 required
               />
               <select
                 value={userForm.paymentMode}
                 onChange={(e) => setUserForm({ ...userForm, paymentMode: e.target.value })}
-                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-700"
+                className="w-full p-2 mb-4 border border-gray-500 rounded-lg bg-gray-700 text-white"
                 required
               >
                 <option value="">Select Payment Mode</option>
@@ -327,13 +327,13 @@ const Admin = () => {
               <div className="flex justify-between mt-4">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white rounded hover:bg-blue-600 dark:hover:bg-blue-700"
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
                   {userForm.id ? 'Update User' : 'Add User'}
                 </button>
                 <button
                   onClick={() => setShowFormModal(false)}
-                  className="px-4 py-2 bg-gray-400 dark:bg-gray-600 text-white rounded hover:bg-gray-500 dark:hover:bg-gray-700"
+                  className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
                 >
                   Cancel
                 </button>
