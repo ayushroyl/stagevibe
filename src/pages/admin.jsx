@@ -110,20 +110,20 @@ const Admin = () => {
   );
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
+    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
       <div className="mb-6">
-        <h1 className="text-3xl font-semibold text-blue-800">{adminName} Dashboard</h1>
+        <h1 className="text-3xl font-semibold text-blue-800 dark:text-blue-300">{adminName} Dashboard</h1>
         <div className="mt-4 space-x-4">
           <button
             onClick={() => {
               setUserForm({name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
               setShowFormModal(true);
             }}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 dark:hover:bg-green-700"
           >
             Add User
           </button>
-          <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
+          <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 dark:hover:bg-red-700">Logout</button>
         </div>
       </div>
 
@@ -133,7 +133,7 @@ const Admin = () => {
           placeholder="Search users..."
           value={searchTerm}
           onChange={handleSearch}
-          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500"
         />
       </div>
 
@@ -142,7 +142,7 @@ const Admin = () => {
         <select
           onChange={handleFilterByClass}
           value={filter.class}
-          className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 w-full sm:w-auto"
+          className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 w-full sm:w-auto"
         >
           <option value="">Filter by Class</option>
           <option value="BCA1">BCA1</option>
@@ -154,30 +154,30 @@ const Admin = () => {
 
         <button
           onClick={() => handleFilterByApproval('all')}
-          className={`px-3 py-2 rounded ${filter.approvedStatus === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}
+          className={`px-3 py-2 rounded ${filter.approvedStatus === 'all' ? 'bg-blue-500 dark:bg-blue-600 text-white' : 'bg-gray-300 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-400 dark:hover:bg-gray-700'}`}
         >
           All Users
         </button>
 
         <button
           onClick={() => handleFilterByApproval('approved')}
-          className={`px-3 py-2 rounded ${filter.approvedStatus === 'approved' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}
+          className={`px-3 py-2 rounded ${filter.approvedStatus === 'approved' ? 'bg-blue-500 dark:bg-blue-600 text-white' : 'bg-gray-300 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-400 dark:hover:bg-gray-700'}`}
         >
           Approved Users
         </button>
 
         <button
           onClick={() => handleFilterByApproval('notApproved')}
-          className={`px-3 py-2 rounded ${filter.approvedStatus === 'notApproved' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}
+          className={`px-3 py-2 rounded ${filter.approvedStatus === 'notApproved' ? 'bg-blue-500 dark:bg-blue-600 text-white' : 'bg-gray-300 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-400 dark:hover:bg-gray-700'}`}
         >
           Not Approved Users
         </button>
       </div>
       {/* User Table */}
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-        <table className="min-w-full border bg-white rounded-lg table-fixed">
+      <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
+        <table className="min-w-full border bg-white dark:bg-gray-800 rounded-lg table-fixed">
           <thead>
-            <tr className="bg-blue-500 text-white">
+            <tr className="bg-blue-500 dark:bg-blue-700 text-white">
               <th className="w-1/12 p-3 text-left text-sm">SR No.</th>
               <th className="w-3/12 p-3 text-left text-sm">Name</th>
               <th className="w-2/12 p-3 text-left text-sm">Class</th>
@@ -190,7 +190,7 @@ const Admin = () => {
           </thead>
           <tbody>
             {paginatedUsers.map((user, index) => (
-              <tr key={user.id} className="border-b hover:bg-gray-100 text-black">
+              <tr key={user.id} className="border-b font-medium dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 text-black dark:text-white">
                 <td className="p-3 text-sm">{(currentPage - 1) * itemsPerPage + index + 1}</td>
                 <td className="p-3 text-sm overflow-hidden whitespace-nowrap text-ellipsis">{user.name}</td>
                 <td className="p-3 text-sm overflow-hidden whitespace-nowrap text-ellipsis">{user.class}</td>
@@ -241,7 +241,7 @@ const Admin = () => {
           <button
             key={index}
             onClick={() => setCurrentPage(index + 1)}
-            className={`mx-1 px-4 py-2 rounded ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}`}
+            className={`mx-1 px-4 py-2 rounded ${currentPage === index + 1 ? 'bg-blue-500 dark:bg-blue-600 text-white' : 'bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-400 dark:hover:bg-gray-600'}`}
           >
             {index + 1}
           </button>
@@ -252,12 +252,12 @@ const Admin = () => {
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm.show && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-5 rounded-lg w-11/12 md:w-1/3">
-            <h2 className="text-lg font-bold text-black">Confirm Delete</h2>
+          <div className="bg-white dark:bg-gray-800 p-5 rounded-lg w-11/12 md:w-1/3">
+            <h2 className="text-lg font-bold text-black dark:text-white">Confirm Delete</h2>
             <p>Are you sure you want to delete this user?</p>
             <div className="mt-4 flex justify-end space-x-2">
-              <button onClick={() => setShowDeleteConfirm({ show: false, userId: null })} className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500">Cancel</button>
-              <button onClick={() => handleDeleteUser(showDeleteConfirm.userId)} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+              <button onClick={() => setShowDeleteConfirm({ show: false, userId: null })} className="px-4 py-2 bg-gray-400 dark:bg-gray-600 text-white rounded hover:bg-gray-500 dark:hover:bg-gray-700">Cancel</button>
+              <button onClick={() => handleDeleteUser(showDeleteConfirm.userId)} className="px-4 py-2 bg-red-500 dark:bg-red-600 text-white rounded hover:bg-red-600 dark:hover:bg-red-700">Delete</button>
             </div>
           </div>
         </div>
@@ -266,21 +266,21 @@ const Admin = () => {
       {/* User Form Modal */}
       {showFormModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-5 rounded-lg w-11/12 md:w-3/4 lg:w-1/2">
-            <h2 className="text-lg font-bold">{userForm.id ? 'Edit User' : 'Add User'}</h2>
+          <div className="bg-white dark:bg-gray-800 p-5 rounded-lg w-11/12 md:w-3/4 lg:w-1/2">
+            <h2 className="text-lg font-bold dark:text-white">{userForm.id ? 'Edit User' : 'Add User'}</h2>
             <form onSubmit={(e) => { e.preventDefault(); handleAddUser(); }}>
               <input
                 type="text"
                 placeholder="Name"
                 value={userForm.name}
                 onChange={(e) => setUserForm({ ...userForm, name: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded mb-4"
+                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-700"
                 required
               />
               <select
                 value={userForm.class}
                 onChange={(e) => setUserForm({ ...userForm, class: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded mb-4"
+                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-700"
                 required
               >
                 <option value="">Select Class</option>
@@ -295,7 +295,7 @@ const Admin = () => {
                 placeholder="Roll"
                 value={userForm.roll}
                 onChange={(e) => setUserForm({ ...userForm, roll: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded mb-4"
+                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-700"
                 required
               />
               <input
@@ -303,7 +303,7 @@ const Admin = () => {
                 placeholder="Mobile"
                 value={userForm.mobile}
                 onChange={(e) => setUserForm({ ...userForm, mobile: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded mb-4"
+                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-700"
                 required
               />
               <input
@@ -311,13 +311,13 @@ const Admin = () => {
                 placeholder="Seat No."
                 value={userForm.seatNo}
                 onChange={(e) => setUserForm({ ...userForm, seatNo: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded mb-4"
+                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-700"
                 required
               />
               <select
                 value={userForm.paymentMode}
                 onChange={(e) => setUserForm({ ...userForm, paymentMode: e.target.value })}
-                className="w-full p-2 border border-gray-300 rounded mb-4"
+                className="w-full p-2 mb-4 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-700"
                 required
               >
                 <option value="">Select Payment Mode</option>
@@ -327,13 +327,13 @@ const Admin = () => {
               <div className="flex justify-between mt-4">
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  className="px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white rounded hover:bg-blue-600 dark:hover:bg-blue-700"
                 >
                   {userForm.id ? 'Update User' : 'Add User'}
                 </button>
                 <button
                   onClick={() => setShowFormModal(false)}
-                  className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400"
+                  className="px-4 py-2 bg-gray-400 dark:bg-gray-600 text-white rounded hover:bg-gray-500 dark:hover:bg-gray-700"
                 >
                   Cancel
                 </button>
