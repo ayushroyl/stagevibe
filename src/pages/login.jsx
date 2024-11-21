@@ -49,7 +49,7 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Username Input */}
-          <div className="relative">
+          <div className="relative font-bold">
             <input
               type="text"
               name="username"
@@ -65,7 +65,7 @@ const Login = () => {
           </div>
 
           {/* Password Input */}
-          <div className="relative">
+          <div className="relative font-bold">
             <input
               type="password"
               name="password"
@@ -96,20 +96,20 @@ const Login = () => {
 
         {/* Are you an admin? */}
         <div className="mt-8 text-center">
-          <p className='text-gray-400'>Forgot Username or Password?
+          <p className='text-gray-400 font-medium'>Forgot Username or Password?
             <Link
               to="https://wa.me/917255071097?text=forgot+my+id+pass"
               className="text-teal-400 hover:text-teal-500 font-medium transition duration-300"
             >
               <><br /></>Contact Us
             </Link> </p>
-          <p className="text-gray-400">Are you an Admin?</p>
+          {/* <p className="text-gray-400">Are you an Admin?</p>
           <Link
             to="/adminlogin"
             className="text-teal-400 hover:text-teal-500 font-medium transition duration-300"
           >
             Admin Login
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>

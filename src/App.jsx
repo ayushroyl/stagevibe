@@ -18,6 +18,7 @@ import SAdminlogin from './pages/sadminlogin';
 import AdminLogin from './pages/adminlogin';
 import SetSuperAdminPassword from './pages/SetSuperAdminPassword';
 import Payment from './pages/Payment';
+import Verify from './pages/verify';
 
 const NotFound = () => <h1 style={{ fontSize: "1.5rem", color: "green" }}>Wait few minutes we'll back soon..</h1>;
 
@@ -36,6 +37,7 @@ const App = () => {
         <Route path='/sadminlogin' element={<SAdminlogin />} />
         <Route path='/SetSuperAdminPassword' element={<SetSuperAdminPassword />} />
         <Route path='/payment' element={<Payment />} />
+        <Route path='/verify' element={<Verify />} />
         <Route path="/*" element={<NotFound />} />
       </Routes>
 

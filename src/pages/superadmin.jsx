@@ -142,21 +142,13 @@ const SuperAdminDashboard = () => {
         setUserForm({ name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
     };
 
-// Delete user
-const handleDeleteUser = (id) => {
-    const confirmation = window.confirm("Are you sure you want to delete this user?");
-    if (confirmation) {
+    // Delete user
+    const handleDeleteUser = (id) => {
+        alert("Are you sure to delete ?")
         const userRef = ref(database, `users/${id}`);
-        remove(userRef)
-            .then(() => {
-                showPopup('User deleted successfully.');
-            })
-            .catch((error) => {
-                console.error("Error deleting user:", error);
-                showPopup('Failed to delete the user. Please try again.');
-            });
-    }
-};
+        remove(userRef);
+        showPopup('User deleted successfully.');
+    };
 
     // Delete performer
     const handleDeletePerformer = (id) => {
