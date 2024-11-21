@@ -142,12 +142,21 @@ const SuperAdminDashboard = () => {
         setUserForm({ name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
     };
 
-    // Delete user
-    const handleDeleteUser = (id) => {
+// Delete user
+const handleDeleteUser = (id) => {
+    const confirmation = window.confirm("Are you sure you want to delete this user?");
+    if (confirmation) {
         const userRef = ref(database, `users/${id}`);
-        remove(userRef);
-        showPopup('User deleted successfully.');
-    };
+        remove(userRef)
+            .then(() => {
+                showPopup('User deleted successfully.');
+            })
+            .catch((error) => {
+                console.error("Error deleting user:", error);
+                showPopup('Failed to delete the user. Please try again.');
+            });
+    }
+};
 
     // Delete performer
     const handleDeletePerformer = (id) => {
@@ -429,12 +438,18 @@ const SuperAdminDashboard = () => {
                                         >
                                             Invite
                                         </a>
-                                        {/*                                         <button
+                                        <button
+                                            onClick={() => handleEditUser(user)}
+                                            className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600 transition"
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
                                             onClick={() => handleDeleteUser(user.id)}
                                             className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
                                         >
                                             Delete
-                                        </button> */}
+                                        </button>
                                     </div>
                                 </li>
                             ))}
