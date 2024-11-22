@@ -70,7 +70,7 @@ const GenerateCard = () => {
         link.click();
 
         // Share the card on WhatsApp
-        const whatsappMessage = `Hello ${user.name},\n\nHere is your invitation card. Click the link to verify: ${qrUrl}`;
+        const whatsappMessage = `Hello ${user.name},\n\nHere is your invitation card & e-ticket for Fresher's Party 2024.`;
         const whatsappUrl = `https://wa.me/91${user.mobile}?text=${encodeURIComponent(
             whatsappMessage
         )}`;

@@ -23,7 +23,7 @@ const VerifyPage = () => {
     // Handle access key submission
     const handleAccessKeySubmit = (e) => {
         e.preventDefault();
-        const validAccessKey = "123456"; // Replace with a securely stored key
+        const validAccessKey = "6295"; // Replace with a securely stored key
 
         if (accessKey === validAccessKey) {
             setIsAccessGranted(true);
