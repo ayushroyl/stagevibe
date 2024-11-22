@@ -138,25 +138,42 @@ const SuperAdminDashboard = () => {
 
     // Edit user
     const handleEditUser = (user) => {
-        setEditingUser(user);
-        setUserForm(user);
+        setEditingUser(user); // Set the user being edited
+        setUserForm({ ...user }); // Populate the form with the selected user's data
     };
+    
 
     const handleSaveEditUser = () => {
+        if (!editingUser) return;
+    
+        // Reference the specific user's node in the database
         const userRef = ref(database, `users/${editingUser.id}`);
-        set(userRef, { ...editingUser, ...userForm });
-        showPopup(`User ${editingUser.name} updated successfully.`);
+        
+        // Update the user's data
+        set(userRef, { ...editingUser, ...userForm })
+            .then(() => {
+                showPopup(`User ${editingUser.name} updated successfully.`);
+            })
+            .catch((error) => {
+                console.error("Error updating user:", error);
+                showPopup(`Failed to update user. Please try again.`);
+            });
+    
+        // Reset the editing form
         setEditingUser(null);
         setUserForm({ name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
     };
+      
 
     // Delete user
     const handleDeleteUser = (id) => {
         alert("Are you sure to delete ?")
         const userRef = ref(database, `users/${id}`);
         remove(userRef);
+        // Update local state (assuming users is an array)
+        setUsers(users.filter((user) => user.id !== id));
         showPopup('User deleted successfully.');
-    };
+      };
 
     // Delete performer
     const handleDeletePerformer = (id) => {
@@ -437,12 +454,12 @@ const SuperAdminDashboard = () => {
                                             Invite
                                         </button>
 
-                                        <button
+                                        {/* <button
                                             onClick={() => handleEditUser(user)}
                                             className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600 transition"
                                         >
                                             Edit
-                                        </button>
+                                        </button> */}
                                         <button
                                             onClick={() => handleDeleteUser(user.id)}
                                             className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
