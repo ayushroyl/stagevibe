@@ -10,6 +10,7 @@ const SuperAdminDashboard = () => {
         JSON.parse(localStorage.getItem('accessGranted') || 'false')
     );
 
+
     useEffect(() => {
         if (!currentSuperAdmin) {
             navigate('/sadminlogin');
@@ -89,6 +90,13 @@ const SuperAdminDashboard = () => {
     const handleAdminInputChange = (e) => {
         const { name, value } = e.target;
         setAdminForm({ ...adminForm, [name]: value });
+    };
+
+    // Function to handle invite
+    const handleInvite = (user) => {
+        console.log(user.id);
+        // Pass user data to /generate page
+        navigate('/generate', { state: { user } });
     };
 
     // Function to add user
@@ -422,14 +430,13 @@ const SuperAdminDashboard = () => {
                                         <p><strong>Added by:</strong> {user.added_by}</p>
                                     </div>
                                     <div className='flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0'>
-                                        <a
-                                            className="bg-blue-600 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
-                                            href={`https://wa.me/+91${user.mobile}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
+                                        <button
+                                            onClick={() => handleInvite(user)}
+                                            className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600 transition"
                                         >
                                             Invite
-                                        </a>
+                                        </button>
+
                                         <button
                                             onClick={() => handleEditUser(user)}
                                             className="bg-blue-500 text-white py-1 px-2 rounded hover:bg-blue-600 transition"
