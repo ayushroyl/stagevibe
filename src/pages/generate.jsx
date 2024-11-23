@@ -70,7 +70,7 @@ const GenerateCard = () => {
         link.click();
 
         // Share the card on WhatsApp
-        const whatsappMessage = `Hello ${user.name},\n\nHere is your invitation card & e-ticket for Fresher's Party 2024.`;
+        const whatsappMessage = `Hello ${user.name},\n\nHere is your invitation card & e-ticket for Fresher's Party 2024.\n\nRate the Performers:-\nhttps://stagevibe.vercel.app/rating`;
         const whatsappUrl = `https://wa.me/91${user.mobile}?text=${encodeURIComponent(
             whatsappMessage
         )}`;
