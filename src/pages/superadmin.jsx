@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ref, set, push, onValue, remove } from 'firebase/database';
+import { ref, set, push, onValue, remove, update } from 'firebase/database';
 import database from '../firebase'; // Import Firebase instance
 
 const SuperAdminDashboard = () => {
@@ -76,6 +76,25 @@ const SuperAdminDashboard = () => {
         });
     }, []);
 
+    // Toggle performer "Show" or "Hide" status
+    const handleToggleShow = (id, isActive) => {
+        const updates = {};
+        // Deactivate all other performers
+        performers.forEach((p) => {
+            if (p.id !== id) updates[`performers/${p.id}/isActive`] = false;
+        });
+        // Toggle selected performer
+        updates[`performers/${id}/isActive`] = !isActive;
+        update(ref(database), updates)
+            .then(() => {
+                setMessage(`Performer ${isActive ? 'hidden' : 'shown'} successfully!`);
+                setShowMessage(true);
+                setTimeout(() => setShowMessage(false), 3000);
+            })
+            .catch((err) => console.error('Error updating performer status:', err));
+    };
+
+
     // Handler functions for form inputs
     const handleUserInputChange = (e) => {
         const { name, value } = e.target;
@@ -141,14 +160,14 @@ const SuperAdminDashboard = () => {
         setEditingUser(user); // Set the user being edited
         setUserForm({ ...user }); // Populate the form with the selected user's data
     };
-    
+
 
     const handleSaveEditUser = () => {
         if (!editingUser) return;
-    
+
         // Reference the specific user's node in the database
         const userRef = ref(database, `users/${editingUser.id}`);
-        
+
         // Update the user's data
         set(userRef, { ...editingUser, ...userForm })
             .then(() => {
@@ -158,28 +177,37 @@ const SuperAdminDashboard = () => {
                 console.error("Error updating user:", error);
                 showPopup(`Failed to update user. Please try again.`);
             });
-    
+
         // Reset the editing form
         setEditingUser(null);
         setUserForm({ name: '', class: '', roll: '', mobile: '', seatNo: '', paymentMode: '' });
     };
-      
+
 
     // Delete user
     const handleDeleteUser = (id) => {
-        alert("Are you sure to delete ?")
-        const userRef = ref(database, `users/${id}`);
-        remove(userRef);
-        // Update local state (assuming users is an array)
-        setUsers(users.filter((user) => user.id !== id));
-        showPopup('User deleted successfully.');
-      };
+        if (confirm("Are you sure to delete ?")) {
+            const userRef = ref(database, `users/${id}`);
+            remove(userRef);
+            // Update local state (assuming users is an array)
+            setUsers(users.filter((user) => user.id !== id));
+            showPopup('User deleted successfully.');
+        }
+    };
 
     // Delete performer
     const handleDeletePerformer = (id) => {
-        const performerRef = ref(database, `performers/${id}`);
-        remove(performerRef);
-        showPopup('Performer deleted successfully.');
+        if (confirm("Are you sure you want to delete this performer?")) {
+            const performerRef = ref(database, `performers/${id}`);
+            remove(performerRef)
+                .then(() => {
+                    showPopup('Performer deleted successfully.');
+                })
+                .catch((error) => {
+                    console.error("Error deleting performer:", error);
+                    showPopup('Failed to delete performer. Please try again.');
+                });
+        }
     };
 
     // Delete admin
@@ -220,21 +248,22 @@ const SuperAdminDashboard = () => {
                 <h2 className="text-xl font-semibold text-gray-600 mb-6">
                     Welcome {superadminName}
                 </h2>
-                <button
-                    onClick={handleLogout}
-                    className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition duration-300"
-                >
-                    Logout
-                </button>
-
-                <div className="flex justify-center mt-8">
-                    <a
-                        className="font-medium bg-green-800 border-2 border-red-600 rounded-md text-white py-2 px-4 hover:bg-green-700 transition-colors"
-                        href="https://admin-panel-tan-three.vercel.app/login"
+                <div className="flex items-center space-x-4">
+                    <button
+                        onClick={handleLogout}
+                        className="bg-red-600 text-white font-semibold py-2 px-4 rounded hover:bg-red-700 transition duration-300"
                     >
-                        New Applied Performers list
+                        Logout
+                    </button>
+                    <a
+                        href="https://admin-panel-tan-three.vercel.app/login"
+                        className="bg-green-800 border-2 border-red-600 text-white font-medium py-2 px-4 rounded-md hover:bg-green-700 transition-colors"
+                    >
+                        Performers
                     </a>
                 </div>
+
+
 
                 {/* Display the message */}
                 {showMessage && (
@@ -242,9 +271,74 @@ const SuperAdminDashboard = () => {
                         {message}
                     </div>
                 )}
+                {/* Add Performer Form */}
+                <div className="mb-10 mt-10">
+                    <h3 className="text-2xl font-bold mb-4 text-black">Add Selected Performer</h3>
+                    <form onSubmit={handleAddPerformer} className="grid grid-cols-2 gap-4">
+                        <input
+                            type="text"
+                            name="name"
+                            value={performerForm.name}
+                            onChange={handlePerformerInputChange}
+                            placeholder="Performer Name"
+                            className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                            required
+                        />
+                        <input
+                            type="text"
+                            name="imgUrl"
+                            value={performerForm.imgUrl}
+                            onChange={handlePerformerInputChange}
+                            placeholder="Image URL"
+                            className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                            required
+                        />
+                        <button
+                            type="submit"
+                            className="col-span-2 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+                        >
+                            Add Performer
+                        </button>
+                    </form>
+                </div>
+                {/* Display Performers */}
+                <div className="mb-10 mt-10">
+
+                    <h3 className="text-2xl font-bold mb-4 text-blue-700">Selected Performers</h3>
+                    {performers.length > 0 ? (
+                        <ul className="space-y-4">
+                            {performers.map((performer) => (
+                                <li key={performer.id} className="flex justify-between items-center p-4 bg-cyan-600 rounded-md shadow-md">
+                                    <div className='text-black'>
+                                        <p><strong>Name:</strong> {performer.name}</p>
+                                        <img src={performer.imgUrl} alt={performer.name} className="w-20 h-20 object-cover mt-2" />
+                                    </div>
+                                    <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+                                        <button
+                                            onClick={() => handleToggleShow(performer.id, performer.isActive)}
+                                            className={`px-4 py-1 rounded-md transition ${performer.isActive ? 'bg-yellow-500 hover:yellow-600' : 'bg-green-500 hover:bg-green-600'
+                                                } text-white`}
+                                        >
+                                            {performer.isActive ? 'Hide' : 'Show'}
+                                        </button>
+
+                                        <button
+                                            onClick={() => handleDeletePerformer(performer.id)}
+                                            className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className='text-red-500'>No performers available.</p>
+                    )}
+                </div>
 
                 {/* Add User Form */}
-                <div className="mb-10 ">
+                <div className="mt-6 mb-10 ">
                     <h3 className="text-2xl font-bold mb-4 text-black">Add User</h3>
                     <form onSubmit={handleAddUser} className="grid grid-cols-2 gap-4">
                         <input
@@ -317,37 +411,6 @@ const SuperAdminDashboard = () => {
                     </form>
                 </div>
 
-                {/* Add Performer Form */}
-                <div className="mb-10">
-                    <h3 className="text-2xl font-bold mb-4 text-black">Add Selected Performer</h3>
-                    <form onSubmit={handleAddPerformer} className="grid grid-cols-2 gap-4">
-                        <input
-                            type="text"
-                            name="name"
-                            value={performerForm.name}
-                            onChange={handlePerformerInputChange}
-                            placeholder="Performer Name"
-                            className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                            required
-                        />
-                        <input
-                            type="text"
-                            name="imgUrl"
-                            value={performerForm.imgUrl}
-                            onChange={handlePerformerInputChange}
-                            placeholder="Image URL"
-                            className="font-medium bg-gray-700 border border-gray-600 text-white p-2 mb-4 w-full rounded shadow focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                            required
-                        />
-                        <button
-                            type="submit"
-                            className="col-span-2 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
-                        >
-                            Add Performer
-                        </button>
-                    </form>
-                </div>
-
                 {/* Add Admin Form */}
                 <div className="mb-10">
                     <h3 className="text-2xl font-bold mb-4 text-black">Add Admin</h3>
@@ -397,33 +460,6 @@ const SuperAdminDashboard = () => {
                             ))}
                         </ul>) : (
                         <p className="text-black">No Admins.</p>
-                    )}
-                </div>
-                {/* Display Performers */}
-                <div className="mb-10">
-
-                    <h3 className="text-2xl font-bold mb-4 text-blue-700">Selected Performers</h3>
-                    {performers.length > 0 ? (
-                        <ul className="space-y-4">
-                            {performers.map((performer) => (
-                                <li key={performer.id} className="flex justify-between items-center p-4 bg-cyan-600 rounded-md shadow-md">
-                                    <div className='text-black'>
-                                        <p><strong>Name:</strong> {performer.name}</p>
-                                        <img src={performer.imgUrl} alt={performer.name} className="w-20 h-20 object-cover mt-2" />
-                                    </div>
-                                    <div>
-                                        <button
-                                            onClick={() => handleDeletePerformer(performer.id)}
-                                            className="bg-red-500 text-white px-4 py-1 rounded-md hover:bg-red-600 transition"
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p className='text-red-500'>No performers available.</p>
                     )}
                 </div>
                 {/* Display Approved Users */}
