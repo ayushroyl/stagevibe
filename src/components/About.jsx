@@ -112,7 +112,7 @@ const About = () => {
                 <p className="text-lg md:text-xl font-semibold text-center flex items-center justify-center gap-2">
                   <Calendar className="text-yellow-300" />
                   <span className="text-pink-300">Date:</span> 
-                  <span className="text-indigo-100">To be announced</span>
+                  <span className="text-indigo-100">26 November 2024</span>
                 </p>
               </div>
               <div className="p-4 rounded-xl bg-black/30 backdrop-blur-sm border border-pink-500/20 hover:border-pink-500/40 transition-colors duration-300">
