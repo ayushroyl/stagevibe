@@ -88,7 +88,7 @@ const VerifyPage = () => {
             <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.2 }}
                 className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-md"
             >
                 <h1 className="text-2xl font-bold text-center mb-4">
@@ -131,7 +131,7 @@ const VerifyPage = () => {
                                 <motion.div
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
-                                    transition={{ delay: 0.3 }}
+                                    transition={{ delay: 0.1 }}
                                     className="mb-6"
                                 >
                                     <h2 className="text-xl font-semibold text-center mb-2">User Details</h2>
