@@ -29,10 +29,17 @@ const Footer = () => {
         <div>
           <h4 className="text-md font-semibold mb-4 text-pink-300">Connect with Us</h4>
           <div className="flex justify-center space-x-4">
-            {[Instagram, Linkedin, Github, Twitter].map((Icon, index) => (
+            {[
+              { Icon: Instagram, url: "https://www.instagram.com/ayushroyl" },
+              { Icon: Linkedin, url: "https://www.linkedin.com/in/ayushroyl" },
+              { Icon: Github, url: "https://github.com/ayushroyl" },
+              { Icon: Twitter, url: "https://twitter.com/ayushroyl" },
+            ].map(({ Icon, url }, index) => (
               <motion.a
                 key={index}
-                href="#"
+                href={url}
+                target="_blank" // Open in a new tab
+                rel="noopener noreferrer" // Security best practice
                 className="text-indigo-200 hover:text-pink-300 transition-colors duration-300"
                 whileHover={{ scale: 1.2 }}
                 whileTap={{ scale: 0.9 }}
@@ -42,6 +49,7 @@ const Footer = () => {
             ))}
           </div>
         </div>
+
 
         {/* About StageVibe */}
         <div>

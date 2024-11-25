@@ -20,6 +20,8 @@ import SetSuperAdminPassword from './pages/SetSuperAdminPassword';
 import Payment from './pages/Payment';
 import GenerateQRCode from './pages/generate';
 import Verify from './pages/verify';
+import NewVoter from './pages/newvoter';
+import Leaderboard from './pages/leaderboard';
 
 const NotFound = () => <h1 style={{ fontSize: "1.5rem", color: "green" }}>Wait few minutes we'll back soon..</h1>;
 
@@ -30,7 +32,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<><Home /> <About /> <Agenda /> <Photos /> <Team /> <FAQ /> </>} />
         <Route path='/rating' element={<Rating />} />
-        <Route path='/booking' element={<Booking />} />
+        {/* <Route path='/booking' element={<Booking />} /> */}
         <Route path='/login' element={<Login />} />
         <Route path='/admin' element={<Admin />} />
         <Route path='/superadmin' element={<Superadmin />} />
@@ -40,6 +42,8 @@ const App = () => {
         <Route path='/payment' element={<Payment />} />
         <Route path='/generate' element={<GenerateQRCode />} />
         <Route path='/verify' element={<Verify />} />
+        <Route path='/newvoter' element={<NewVoter />} />
+        <Route path='/leaderboard' element={<Leaderboard />} />
         <Route path="/*" element={<NotFound />} />
       </Routes>
 

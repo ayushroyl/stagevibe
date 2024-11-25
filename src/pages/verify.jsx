@@ -138,6 +138,7 @@ const VerifyPage = () => {
                                     <div className="bg-gray-700 p-4 rounded-lg space-y-2">
                                         <p>Name: {userData.name}</p>
                                         <p>Mobile: {userData.mobile}</p>
+                                        <p>Class: {userData.class}</p>
                                         <p>
                                             Entry Verified:{" "}
                                             <span className={entryVerified ? "text-green-400" : "text-red-400"}>
