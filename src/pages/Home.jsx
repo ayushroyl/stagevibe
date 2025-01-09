@@ -49,12 +49,12 @@ const Home = () => {
             id="hero-heading"
             className="text-4xl sm:text-6xl lg:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300 tracking-tight"
           >
-            Fresher's Party 2024
+            Your Party Name
           </h1>
 
           {/* Subheading */}
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-pink-300 mt-4">
-            For MCA & BCA Fresher's
+            SubTitle for your party
           </h2>
 
           {/* Description */}
